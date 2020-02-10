@@ -531,10 +531,6 @@ PRODUCT_COPY_FILES += \
 # Security Patch
 BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 
-# Shims
-PRODUCT_PACKAGES += \
-    camera.sdm660_shim
-
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
     $(COMMON_PATH) \
