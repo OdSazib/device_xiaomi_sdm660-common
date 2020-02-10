@@ -87,17 +87,12 @@ function blob_fixup() {
         sed -i "s|/system/etc/firmware|/vendor/firmware\x0\x0\x0\x0|g" "${2}"
         ;;
 
-    vendor/lib/hw/camera.sdm660.so)
-        "${PATCHELF}" --add-needed camera.sdm660_shim.so "${2}"
-        ;;
-
     vendor/lib64/libril-qc-hal-qmi.so)
         "${PATCHELF}" --replace-needed "libprotobuf-cpp-full.so" "libprotobuf-cpp-full-v29.so" "${2}"
         ;;
 
     vendor/lib64/libwvhidl.so)
         "${PATCHELF}" --replace-needed "libprotobuf-cpp-lite.so" "libprotobuf-cpp-lite-v29.so" "${2}"
-        ;;
 
     esac
 
