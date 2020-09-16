@@ -315,12 +315,6 @@
         <transport>hwbinder</transport>
         <fqname>@1.0::ISoter/default</fqname>
     </hal>
-    <!-- qdutils service -->
-    <hal format="hidl">
-        <name>vendor.qti.hardware.qdutils_disp</name>
-        <transport>hwbinder</transport>
-        <fqname>@1.0::IQdutilsDisp/default</fqname>
-    </hal>
     <hal format="hidl">
         <name>vendor.qti.hardware.tui_comm</name>
         <transport>hwbinder</transport>
