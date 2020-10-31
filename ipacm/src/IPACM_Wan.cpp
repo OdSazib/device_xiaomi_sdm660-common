@@ -92,7 +92,8 @@ int	IPACM_Wan::ipa_if_num_tether_v4[IPA_MAX_IFACE_ENTRIES];
 int	IPACM_Wan::ipa_if_num_tether_v6[IPA_MAX_IFACE_ENTRIES];
 #endif
 
-uint16_t IPACM_Wan::mtu_default_wan = DEFAULT_MTU_SIZE;
+uint16_t IPACM_Wan::mtu_default_wan_v4 = DEFAULT_MTU_SIZE;
+uint16_t IPACM_Wan::mtu_default_wan_v6 = DEFAULT_MTU_SIZE;
 
 IPACM_Wan::IPACM_Wan(int iface_index,
 	ipacm_wan_iface_type is_sta_mode,
@@ -132,7 +133,11 @@ IPACM_Wan::IPACM_Wan(int iface_index,
 	ext_prop = NULL;
 	is_ipv6_frag_firewall_flt_rule_installed = false;
 	ipv6_frag_firewall_flt_rule_hdl = 0;
-	mtu_size = DEFAULT_MTU_SIZE;
+
+	mtu_v4 = DEFAULT_MTU_SIZE;
+	mtu_v4_set = false;
+	mtu_v6 = DEFAULT_MTU_SIZE;
+	mtu_v6_set = false;
 
 	num_wan_client = 0;
 	header_name_count = 0;
@@ -145,6 +150,53 @@ IPACM_Wan::IPACM_Wan(int iface_index,
 	m_fd_ipa = 0;
 	wan_client_len = 0;
 	m_is_sta_mode = is_sta_mode;
+
+#ifdef IPA_MTU_EVENT_MAX
+	/* Query WAN MTU to handle IPACM restart scenarios. */
+	if(is_sta_mode == Q6_WAN)
+	{
+		int fd_wwan_ioctl;
+		ipa_mtu_info *mtu_info = (ipa_mtu_info *)malloc(sizeof(ipa_mtu_info));
+		if (mtu_info)
+		{
+			memset(mtu_info, 0, sizeof(ipa_mtu_info));
+			memcpy(mtu_info->if_name, dev_name, IPA_IFACE_NAME_LEN);
+			fd_wwan_ioctl = open(WWAN_QMI_IOCTL_DEVICE_NAME, O_RDWR);
+			if(fd_wwan_ioctl < 0)
+			{
+				IPACMERR("Failed to open %s.\n",WWAN_QMI_IOCTL_DEVICE_NAME);
+			}
+			else
+			{
+				IPACMDBG_H("send WAN_IOC_GET_WAN_MTU for %s\n", mtu_info->if_name);
+				if(ioctl(fd_wwan_ioctl, WAN_IOC_GET_WAN_MTU, mtu_info))
+				{
+					IPACMERR("Failed to send WAN_IOC_GET_WAN_MTU\n ");
+				}
+				else
+				{
+					/* Updated MTU values.*/
+					if (mtu_info->mtu_v4)
+					{
+						mtu_v4 = mtu_info->mtu_v4;
+						mtu_v4_set = true;
+						IPACMDBG_H("Updated v4 mtu=[%d] for (%s)\n",
+							mtu_v4, mtu_info->if_name);
+					}
+					if (mtu_info->mtu_v6)
+					{
+						mtu_v6 = mtu_info->mtu_v6;
+						mtu_v6_set = true;
+						IPACMDBG_H("Updated v6 mtu=[%d] for (%s)\n",
+							mtu_v6, mtu_info->if_name);
+					}
+				}
+				close(fd_wwan_ioctl);
+			}
+			free(mtu_info);
+		}
+	}
+#endif
 
 	if(iface_query != NULL)
 	{
@@ -1112,6 +1164,7 @@ void IPACM_Wan::event_callback(ipa_cm_event_id event, void *param)
 			}
 		}
 		break;
+
 	case IPA_LINK_DOWN_EVENT:
 		{
 			ipacm_event_data_fid *data = (ipacm_event_data_fid *)param;
@@ -1721,54 +1774,117 @@ void IPACM_Wan::event_callback(ipa_cm_event_id event, void *param)
 		}
 		break;
 
-		case IPA_WLAN_SWITCH_TO_SCC:
-			if(IPACM_Wan::backhaul_mode == WLAN_WAN)
+	case IPA_WLAN_SWITCH_TO_SCC:
+		if(IPACM_Wan::backhaul_mode == WLAN_WAN)
+		{
+			IPACMDBG_H("Received IPA_WLAN_SWITCH_TO_SCC\n");
+			if(ip_type == IPA_IP_MAX)
 			{
-				IPACMDBG_H("Received IPA_WLAN_SWITCH_TO_SCC\n");
-				if(ip_type == IPA_IP_MAX)
-				{
-					handle_wlan_SCC_MCC_switch(true, IPA_IP_v4);
-					handle_wlan_SCC_MCC_switch(true, IPA_IP_v6);
-					handle_wan_client_SCC_MCC_switch(true, IPA_IP_v4);
-					handle_wan_client_SCC_MCC_switch(true, IPA_IP_v6);
-				}
-				else
-				{
-					handle_wlan_SCC_MCC_switch(true, ip_type);
-					handle_wan_client_SCC_MCC_switch(true, ip_type);
-				}
+				handle_wlan_SCC_MCC_switch(true, IPA_IP_v4);
+				handle_wlan_SCC_MCC_switch(true, IPA_IP_v6);
+				handle_wan_client_SCC_MCC_switch(true, IPA_IP_v4);
+				handle_wan_client_SCC_MCC_switch(true, IPA_IP_v6);
 			}
-			break;
-
-		case IPA_WLAN_SWITCH_TO_MCC:
-			if(IPACM_Wan::backhaul_mode == WLAN_WAN)
+			else
 			{
-				IPACMDBG_H("Received IPA_WLAN_SWITCH_TO_MCC\n");
-				if(ip_type == IPA_IP_MAX)
-				{
-					handle_wlan_SCC_MCC_switch(false, IPA_IP_v4);
-					handle_wlan_SCC_MCC_switch(false, IPA_IP_v6);
-					handle_wan_client_SCC_MCC_switch(false, IPA_IP_v4);
-					handle_wan_client_SCC_MCC_switch(false, IPA_IP_v6);
-				}
-				else
-				{
-					handle_wlan_SCC_MCC_switch(false, ip_type);
-					handle_wan_client_SCC_MCC_switch(false, ip_type);
-				}
+				handle_wlan_SCC_MCC_switch(true, ip_type);
+				handle_wan_client_SCC_MCC_switch(true, ip_type);
 			}
-			break;
-#ifdef FEATURE_IPACM_HAL
-		/* WA for WLAN to clean up NAT instance during SSR */
-		case IPA_SSR_NOTICE:
-		case IPA_WLAN_FWR_SSR_BEFORE_SHUTDOWN_NOTICE:
-			IPACMDBG_H("Received IPA_SSR_NOTICE event.\n");
-			if(m_is_sta_mode == WLAN_WAN)
-			{
-				IPACM_Iface::ipacmcfg->DelNatIfaces(dev_name); // delete NAT-iface
-			}
+		}
 		break;
+
+	case IPA_WLAN_SWITCH_TO_MCC:
+		if(IPACM_Wan::backhaul_mode == WLAN_WAN)
+		{
+			IPACMDBG_H("Received IPA_WLAN_SWITCH_TO_MCC\n");
+			if(ip_type == IPA_IP_MAX)
+			{
+				handle_wlan_SCC_MCC_switch(false, IPA_IP_v4);
+				handle_wlan_SCC_MCC_switch(false, IPA_IP_v6);
+				handle_wan_client_SCC_MCC_switch(false, IPA_IP_v4);
+				handle_wan_client_SCC_MCC_switch(false, IPA_IP_v6);
+			}
+			else
+			{
+				handle_wlan_SCC_MCC_switch(false, ip_type);
+				handle_wan_client_SCC_MCC_switch(false, ip_type);
+			}
+		}
+		break;
+#ifdef FEATURE_IPACM_HAL
+	/* WA for WLAN to clean up NAT instance during SSR */
+	case IPA_SSR_NOTICE:
+	case IPA_WLAN_FWR_SSR_BEFORE_SHUTDOWN_NOTICE:
+	{
+		IPACMDBG_H("Received IPA_SSR_NOTICE event.\n");
+		if(m_is_sta_mode == WLAN_WAN)
+		{
+			IPACM_Iface::ipacmcfg->DelNatIfaces(dev_name); // delete NAT-iface
+		}
+	}
+	break;
 #endif
+#ifdef IPA_MTU_EVENT_MAX
+	case IPA_MTU_SET:
+	{
+		ipacm_event_mtu_info *data = (ipacm_event_mtu_info *)param;
+		ipa_mtu_info *mtu_info = &(data->mtu_info);
+		ipa_interface_index = iface_ipa_index_query(data->if_index);
+
+		if (ipa_interface_index == ipa_if_num)
+		{
+			IPACMDBG_H("Received IPA_MTU_SET (Android) for interface (%d)\n",
+				ipa_interface_index);
+			if (mtu_info->ip_type == IPA_IP_v4 || mtu_info->ip_type == IPA_IP_MAX)
+			{
+				/* Update v4_mtu. */
+				mtu_v4 = mtu_info->mtu_v4;
+				mtu_v4_set = true;
+
+				if (active_v4)
+				{
+					/* upstream interface. update default MTU. */
+					mtu_default_wan_v4 = mtu_v4;
+				}
+				IPACMDBG_H("Updated v4 mtu=[%d] for (%s), upstream_mtu=[%d]\n",
+					mtu_v4, mtu_info->if_name, mtu_default_wan_v4);
+			}
+			if (mtu_info->ip_type == IPA_IP_v6 || mtu_info->ip_type == IPA_IP_MAX)
+			{
+				/* Update v4_mtu. */
+				mtu_v6 = mtu_info->mtu_v6;
+				mtu_v6_set = true;
+				if (active_v6)
+				{
+					/* upstream interface. update default MTU. */
+					mtu_default_wan_v6 = mtu_v6;
+				}
+				IPACMDBG_H("Updated v6 mtu=[%d] for (%s), upstream_mtu=[%d]\n",
+					mtu_v6, mtu_info->if_name, mtu_default_wan_v6);
+			}
+
+			if (active_v4 || active_v6)
+			{
+				ipacm_event_mtu_info *mtu_event;
+				ipacm_cmd_q_data evt_data;
+				mtu_event = (ipacm_event_mtu_info *)malloc(sizeof(*mtu_event));
+				if(mtu_event == NULL)
+				{
+					IPACMERR("Failed to allocate memory.\n");
+					return;
+				}
+				memcpy(&mtu_event->mtu_info, mtu_info, sizeof(ipa_mtu_info));
+				evt_data.event = IPA_MTU_UPDATE;
+				evt_data.evt_data = mtu_event;
+				/* finish command queue */
+				IPACMDBG_H("Posting IPA_MTU_UPDATE event\n");
+				IPACM_EvtDispatcher::PostEvt(&evt_data);
+			}
+		}
+	}
+	break;
+#endif
+
 	default:
 		break;
 	}
@@ -1779,7 +1895,6 @@ void IPACM_Wan::event_callback(ipa_cm_event_id event, void *param)
 /* wan default route/filter rule configuration */
 int IPACM_Wan::handle_route_add_evt(ipa_ip_type iptype)
 {
-
 	/* add default WAN route */
 	struct ipa_ioc_add_rt_rule *rt_rule = NULL;
 	struct ipa_rt_rule_add *rt_rule_entry;
@@ -1817,8 +1932,14 @@ int IPACM_Wan::handle_route_add_evt(ipa_ip_type iptype)
 	}
 	IPACMDBG_H("backhaul_is_wan_bridge ?: %d \n", IPACM_Wan::backhaul_is_wan_bridge);
 
-	/* query MTU size of the interface */
-	query_mtu_size();
+	/* query MTU size of the interface if MTU is not set via ioctl. */
+	if (!mtu_v4_set && !mtu_v6_set)
+	{
+		if(query_mtu_size())
+		{
+			IPACMERR("Failed to query mtu");
+		}
+	}
 
 	if (m_is_sta_mode ==Q6_WAN)
 	{
@@ -2104,11 +2225,6 @@ int IPACM_Wan::handle_route_add_evt(ipa_ip_type iptype)
 				wan_route_rule_v6_hdl_a5[0], 0, iptype);
 	}
 
-	/* set mtu_default_wan to current default wan instance */
-	mtu_default_wan = mtu_size;
-
-	IPACMDBG_H("replace the mtu_default_wan to %d\n", mtu_default_wan);
-
 	ipacm_event_iface_up *wanup_data;
 	wanup_data = (ipacm_event_iface_up *)malloc(sizeof(ipacm_event_iface_up));
 	if (wanup_data == NULL)
@@ -2122,6 +2238,10 @@ int IPACM_Wan::handle_route_add_evt(ipa_ip_type iptype)
 	/* handling filter rule construction */
 	if (iptype == IPA_IP_v4)
 	{
+		/* set mtu_default_wan to current default wan instance */
+		mtu_default_wan_v4 = mtu_v4;
+		IPACMDBG_H("replace the mtu_wan to %d\n", mtu_default_wan_v4);
+
 		IPACM_Wan::wan_up = true;
 		active_v4 = true;
 		memcpy(IPACM_Wan::wan_up_dev_name,
@@ -2181,6 +2301,10 @@ int IPACM_Wan::handle_route_add_evt(ipa_ip_type iptype)
 	}
 	else
 	{
+		/* set mtu_default_wan to current default wan instance */
+		mtu_default_wan_v6 = mtu_v6;
+		IPACMDBG_H("replace the mtu_wan to %d\n", mtu_default_wan_v6);
+
 		memcpy(backhaul_ipv6_prefix, ipv6_prefix, sizeof(backhaul_ipv6_prefix));
 		IPACMDBG_H("Setup backhaul ipv6 prefix to be 0x%08x%08x.\n", backhaul_ipv6_prefix[0], backhaul_ipv6_prefix[1]);
 
@@ -5453,8 +5577,13 @@ int IPACM_Wan::handle_down_evt_ex()
 		goto fail;
 	}
 
+#ifndef IPA_MTU_EVENT_MAX
 	/* reset the mtu size */
-	mtu_size = DEFAULT_MTU_SIZE;
+	mtu_v4 = DEFAULT_MTU_SIZE;
+	mtu_v4_set = false;
+	mtu_v6 = DEFAULT_MTU_SIZE;
+	mtu_v6_set = false;
+#endif
 
 	if(ip_type == IPA_IP_v4)
 	{
@@ -7828,10 +7957,12 @@ int IPACM_Wan::query_mtu_size()
 		return IPACM_FAILURE;
 	}
 	IPACMDBG_H("mtu=[%d]\n", if_mtu.ifr_mtu);
-	if (if_mtu.ifr_mtu < DEFAULT_MTU_SIZE) {
-		mtu_size = if_mtu.ifr_mtu;
-		IPACMDBG_H("replaced mtu=[%d] for (%s)\n", mtu_size, dev_name);
+	if (if_mtu.ifr_mtu <= DEFAULT_MTU_SIZE) {
+		mtu_v4 = mtu_v6 = if_mtu.ifr_mtu;
+	}else {
+		mtu_v4 = mtu_v6 = DEFAULT_MTU_SIZE;
 	}
+	IPACMDBG_H("Updated mtu=[%d] for (%s)\n", mtu_v4, dev_name);
 
 	close(fd);
 	return IPACM_SUCCESS;
