@@ -592,9 +592,12 @@ private:
 		return IPACM_SUCCESS;
 	}
 
-	int handle_wan_hdr_init(uint8_t *mac_addr);
+	int handle_wan_hdr_init(uint8_t *mac_addr, bool replaced = false, int entry = 0);
 	int handle_wan_client_ipaddr(ipacm_event_data_all *data);
 	int handle_wan_client_route_rule(uint8_t *mac_addr, ipa_ip_type iptype);
+
+	/* handle_gw_mac_renew, index_client valiud is success */
+	int handle_gw_mac_renew(ipacm_event_data_all *data, int index_client);
 
 	/* handle new_address event */
 	int handle_addr_evt(ipacm_event_data_addr *data);
@@ -603,10 +606,10 @@ private:
 	int handle_addr_evt_mhi_q6(ipacm_event_data_addr *data);
 
 	/* wan default route/filter rule configuration */
-	int handle_route_add_evt(ipa_ip_type iptype);
+	int handle_route_add_evt(ipa_ip_type iptype, bool add_only = false);
 
 	/* construct complete STA ethernet header */
-	int handle_sta_header_add_evt();
+	int handle_sta_header_add_evt(bool renew = false);
 
 	bool check_dft_firewall_rules_attr_mask(IPACM_firewall_conf_t *firewall_config);
 
@@ -621,7 +624,7 @@ private:
 	/* configure the initial firewall filter rules */
 	int config_dft_embms_rules(ipa_ioc_add_flt_rule *pFilteringTable_v4, ipa_ioc_add_flt_rule *pFilteringTable_v6);
 
-	int handle_route_del_evt(ipa_ip_type iptype);
+	int handle_route_del_evt(ipa_ip_type iptype, bool delete_only = false);
 
 	int del_dft_firewall_rules(ipa_ip_type iptype);
 

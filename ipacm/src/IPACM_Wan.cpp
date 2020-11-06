@@ -862,7 +862,7 @@ int IPACM_Wan::handle_addr_evt_mhi_q6(ipacm_event_data_addr *data)
 				IPACMDBG_H(" Has rx/tx properties registered for iface %s, add for NATTING for ip-family %d \n", dev_name, IPA_IP_v6);
 				IPACM_Iface::ipacmcfg->AddNatIfaces(dev_name, IPA_IP_v6);
 			}
-			/* skylar setup v6-wan-tbl */
+			/* setup v6-wan-tbl */
 			rt_rule = (struct ipa_ioc_add_rt_rule *)
 				calloc(1, sizeof(struct ipa_ioc_add_rt_rule) +
 				NUM_RULES * sizeof(struct ipa_rt_rule_add));
@@ -1628,6 +1628,8 @@ void IPACM_Wan::event_callback(ipa_cm_event_id event, void *param)
 		{
 			ipacm_event_data_all *data = (ipacm_event_data_all *)param;
 			ipa_interface_index = iface_ipa_index_query(data->if_index);
+			int index = 0;
+			bool renew = false;
 
 			if (ipa_interface_index == ipa_if_num)
 			{
@@ -1659,6 +1661,7 @@ void IPACM_Wan::event_callback(ipa_cm_event_id event, void *param)
 				}
 
 				IPACMDBG_H("wan-iface got client \n");
+
 				/* first construc WAN-client full header */
 				if(memcmp(data->mac_addr,
 						invalid_mac,
@@ -1670,7 +1673,20 @@ void IPACM_Wan::event_callback(ipa_cm_event_id event, void *param)
 					return;
 				}
 
-				handle_wan_hdr_init(data->mac_addr);
+				/* check if same as GW_ip need replacing */
+				if( handle_gw_mac_renew(data, index) == IPACM_SUCCESS)
+				{
+					renew = true;
+					IPACMDBG_H("Renew is happening with client-index (%d)\n", index);
+					/* clinet renew procedure */
+					handle_wan_hdr_init(data->mac_addr, true, index);
+				}
+				else
+				{
+					IPACMDBG_H("Renew is no need!\n");
+					handle_wan_hdr_init(data->mac_addr);
+				}
+
 				IPACMDBG_H("construct wan-client header and route rules \n");
 				/* Associate with IP and construct RT-rule */
 				if (handle_wan_client_ipaddr(data) == IPACM_FAILURE)
@@ -1679,7 +1695,7 @@ void IPACM_Wan::event_callback(ipa_cm_event_id event, void *param)
 				}
 				handle_wan_client_route_rule(data->mac_addr, data->iptype);
 				/* Check & construct STA header */
-				handle_sta_header_add_evt();
+				handle_sta_header_add_evt(renew);
 				return;
 			}
 		}
@@ -1893,7 +1909,7 @@ void IPACM_Wan::event_callback(ipa_cm_event_id event, void *param)
 }
 
 /* wan default route/filter rule configuration */
-int IPACM_Wan::handle_route_add_evt(ipa_ip_type iptype)
+int IPACM_Wan::handle_route_add_evt(ipa_ip_type iptype, bool add_only)
 {
 	/* add default WAN route */
 	struct ipa_ioc_add_rt_rule *rt_rule = NULL;
@@ -2225,6 +2241,17 @@ int IPACM_Wan::handle_route_add_evt(ipa_ip_type iptype)
 				wan_route_rule_v6_hdl_a5[0], 0, iptype);
 	}
 
+	/* support delete only, not post wan_down event */
+	if (add_only)
+	{
+		IPACMDBG_H(" Only add default WAN routing rules (%d)\n", add_only);
+		if(rt_rule != NULL)
+		{
+			free(rt_rule);
+		}
+		return IPACM_SUCCESS;
+	}
+
 	ipacm_event_iface_up *wanup_data;
 	wanup_data = (ipacm_event_iface_up *)malloc(sizeof(ipacm_event_iface_up));
 	if (wanup_data == NULL)
@@ -2495,7 +2522,7 @@ int IPACM_Wan::post_wan_down_tether_evt(ipa_ip_type iptype, int ipa_if_num_tethe
 #endif
 
 /* construct complete ethernet header */
-int IPACM_Wan::handle_sta_header_add_evt()
+int IPACM_Wan::handle_sta_header_add_evt(bool renew)
 {
 	int res = IPACM_SUCCESS, index = IPACM_INVALID_INDEX;
 	if((header_set_v4 == true) || (header_set_v6 == true))
@@ -2552,7 +2579,13 @@ int IPACM_Wan::handle_sta_header_add_evt()
 		}
 	}
 
-	/* checking if the ipv4 same as default route */
+	/* see if v4 default routes are setup before constructing full header */
+	if(header_partial_default_wan_v4 == true)
+	{
+	   handle_route_add_evt(IPA_IP_v4, renew);
+	}
+
+	/* checking if the ipv6 same as default route */
 	if(wan_v6_addr_gw_set)
 	{
 		index = get_wan_client_index_ipv6(wan_v6_addr_gw);
@@ -2600,15 +2633,11 @@ int IPACM_Wan::handle_sta_header_add_evt()
 		}
 	}
 
-	/* see if default routes are setup before constructing full header */
-	if(header_partial_default_wan_v4 == true)
-	{
-	   handle_route_add_evt(IPA_IP_v4);
-	}
+	/* see if v6 default routes are setup before constructing full header */
 
 	if(header_partial_default_wan_v6 == true)
 	{
-	   handle_route_add_evt(IPA_IP_v6);
+	   handle_route_add_evt(IPA_IP_v6, renew);
 	}
 	return res;
 }
@@ -4796,7 +4825,7 @@ int IPACM_Wan::del_dft_firewall_rules(ipa_ip_type iptype)
 }
 
 /* for STA mode: wan default route/filter rule delete */
-int IPACM_Wan::handle_route_del_evt(ipa_ip_type iptype)
+int IPACM_Wan::handle_route_del_evt(ipa_ip_type iptype, bool delete_only)
 {
 	uint32_t tx_index;
 	ipacm_cmd_q_data evt_data;
@@ -4820,42 +4849,42 @@ int IPACM_Wan::handle_route_del_evt(ipa_ip_type iptype)
 	if (((iptype == IPA_IP_v4) && (active_v4 == true)) ||
 			((iptype == IPA_IP_v6) && (active_v6 == true)))
 	{
-		if(IPACM_Iface::ipacmcfg->GetIPAVer() >= IPA_HW_None && IPACM_Iface::ipacmcfg->GetIPAVer() < IPA_HW_v4_0)
+		if (!delete_only)
 		{
-			/* Delete corresponding ipa_rm_resource_name of TX-endpoint after delete IPV4/V6 RT-rule */
-			IPACMDBG_H("dev %s delete producer dependency\n", dev_name);
-			IPACMDBG_H("depend Got pipe %d rm index : %d \n", tx_prop->tx[0].dst_pipe, IPACM_Iface::ipacmcfg->ipa_client_rm_map_tbl[tx_prop->tx[0].dst_pipe]);
-			IPACM_Iface::ipacmcfg->DelRmDepend(IPACM_Iface::ipacmcfg->ipa_client_rm_map_tbl[tx_prop->tx[0].dst_pipe]);
-		}
-		else
-		{
-			/* change wan_state for Q6_MHI */
-#ifdef WAN_IOC_NOTIFY_WAN_STATE
-			IPACMDBG_H("ipa_pm_q6_check to %d\n", ipa_pm_q6_check);
-			if(ipa_pm_q6_check == 1 && m_is_sta_mode == Q6_MHI_WAN)
+			if(IPACM_Iface::ipacmcfg->GetIPAVer() >= IPA_HW_None && IPACM_Iface::ipacmcfg->GetIPAVer() < IPA_HW_v4_0)
 			{
-				fd_wwan_ioctl = open(WWAN_QMI_IOCTL_DEVICE_NAME, O_RDWR);
-				if(fd_wwan_ioctl < 0)
-				{
-					IPACMERR("Failed to open %s.\n",WWAN_QMI_IOCTL_DEVICE_NAME);
-					return false;
-				}
-				IPACMDBG_H("send WAN_IOC_NOTIFY_WAN_STATE down to IPA_PM\n");
-#ifdef WAN_IOCTL_NOTIFY_WAN_INTF_NAME
-                                strlcpy(wan_state.upstreamIface, dev_name, IFNAMSIZ);
-#endif
-				if(ioctl(fd_wwan_ioctl, WAN_IOC_NOTIFY_WAN_STATE, &wan_state))
-				{
-					IPACMERR("Failed to send WAN_IOC_NOTIFY_WAN_STATE as up %d\n ", wan_state.up);
-				}
-				close(fd_wwan_ioctl);
+				/* Delete corresponding ipa_rm_resource_name of TX-endpoint after delete IPV4/V6 RT-rule */
+				IPACMDBG_H("dev %s delete producer dependency\n", dev_name);
+				IPACMDBG_H("depend Got pipe %d rm index : %d \n", tx_prop->tx[0].dst_pipe, IPACM_Iface::ipacmcfg->ipa_client_rm_map_tbl[tx_prop->tx[0].dst_pipe]);
+				IPACM_Iface::ipacmcfg->DelRmDepend(IPACM_Iface::ipacmcfg->ipa_client_rm_map_tbl[tx_prop->tx[0].dst_pipe]);
 			}
-			if (ipa_pm_q6_check > 0)
-				ipa_pm_q6_check--;
 			else
-				IPACMERR(" ipa_pm_q6_check becomes negative !!!\n");
+			{
+				/* change wan_state for Q6_MHI */
+#ifdef WAN_IOC_NOTIFY_WAN_STATE
+				IPACMDBG_H("ipa_pm_q6_check to %d\n", ipa_pm_q6_check);
+				if(ipa_pm_q6_check == 1 && m_is_sta_mode == Q6_MHI_WAN)
+				{
+					fd_wwan_ioctl = open(WWAN_QMI_IOCTL_DEVICE_NAME, O_RDWR);
+					if(fd_wwan_ioctl < 0)
+					{
+						IPACMERR("Failed to open %s.\n",WWAN_QMI_IOCTL_DEVICE_NAME);
+						return false;
+					}
+					IPACMDBG_H("send WAN_IOC_NOTIFY_WAN_STATE down to IPA_PM\n");
+					if(ioctl(fd_wwan_ioctl, WAN_IOC_NOTIFY_WAN_STATE, &wan_state))
+					{
+						IPACMERR("Failed to send WAN_IOC_NOTIFY_WAN_STATE as up %d\n ", wan_state.up);
+					}
+					close(fd_wwan_ioctl);
+				}
+				if (ipa_pm_q6_check > 0)
+					ipa_pm_q6_check--;
+				else
+					IPACMERR(" ipa_pm_q6_check becomes negative !!!\n");
 #endif
-		}
+			}
+		} // end of delete_only
 
 		for (tx_index = 0; tx_index < iface_query->num_tx_props; tx_index++)
 		{
@@ -4898,6 +4927,14 @@ int IPACM_Wan::handle_route_del_evt(ipa_ip_type iptype)
 				return IPACM_FAILURE;
 			}
 		}
+
+		/* support delete only, not post wan_down event */
+		if(delete_only)
+		{
+			IPACMDBG_H(" Only delete default WAN routing rules (%d)\n", delete_only);
+			return IPACM_SUCCESS;
+		}
+
 		ipacm_event_iface_up *wandown_data;
 		wandown_data = (ipacm_event_iface_up *)malloc(sizeof(ipacm_event_iface_up));
 		if (wandown_data == NULL)
@@ -6127,7 +6164,7 @@ fail:
 
 /* handle STA WAN-client */
 /* handle WAN client initial, construct full headers (tx property) */
-int IPACM_Wan::handle_wan_hdr_init(uint8_t *mac_addr)
+int IPACM_Wan::handle_wan_hdr_init(uint8_t *mac_addr, bool replaced, int entry)
 {
 
 #define WAN_IFACE_INDEX_LEN 2
@@ -6139,38 +6176,41 @@ int IPACM_Wan::handle_wan_hdr_init(uint8_t *mac_addr)
 	uint32_t cnt;
 	int clnt_indx;
 
-	clnt_indx = get_wan_client_index(mac_addr);
-
-	if (clnt_indx != IPACM_INVALID_INDEX)
-	{
-		IPACMERR("eth client is found/attached already with index %d \n", clnt_indx);
-		return IPACM_FAILURE;
-	}
-
-	/* add header to IPA */
-	if (num_wan_client >= IPA_MAX_NUM_WAN_CLIENTS)
-	{
-		IPACMERR("Reached maximum number(%d) of eth clients\n", IPA_MAX_NUM_WAN_CLIENTS);
-		return IPACM_FAILURE;
-	}
-
 	IPACMDBG_H("WAN client number: %d\n", num_wan_client);
 
-	memcpy(get_client_memptr(wan_client, num_wan_client)->mac,
+	if(!replaced)
+	{
+		clnt_indx = get_wan_client_index(mac_addr);
+
+		if (clnt_indx != IPACM_INVALID_INDEX)
+		{
+			IPACMERR("eth client is found/attached already with index %d \n", clnt_indx);
+			return IPACM_FAILURE;
+		}
+
+		/* add header to IPA */
+		if (num_wan_client >= IPA_MAX_NUM_WAN_CLIENTS)
+		{
+			IPACMERR("Reached maximum number(%d) of eth clients\n", IPA_MAX_NUM_WAN_CLIENTS);
+			return IPACM_FAILURE;
+		}
+
+		memcpy(get_client_memptr(wan_client, num_wan_client)->mac,
 				 mac_addr,
 				 sizeof(get_client_memptr(wan_client, num_wan_client)->mac));
 
-	IPACMDBG_H("Received Client MAC %02x:%02x:%02x:%02x:%02x:%02x\n",
+		IPACMDBG_H("Received Client MAC %02x:%02x:%02x:%02x:%02x:%02x\n",
 					 mac_addr[0], mac_addr[1], mac_addr[2],
 					 mac_addr[3], mac_addr[4], mac_addr[5]);
 
-	IPACMDBG_H("stored MAC %02x:%02x:%02x:%02x:%02x:%02x\n",
+		IPACMDBG_H("stored MAC %02x:%02x:%02x:%02x:%02x:%02x\n",
 					 get_client_memptr(wan_client, num_wan_client)->mac[0],
 					 get_client_memptr(wan_client, num_wan_client)->mac[1],
 					 get_client_memptr(wan_client, num_wan_client)->mac[2],
 					 get_client_memptr(wan_client, num_wan_client)->mac[3],
 					 get_client_memptr(wan_client, num_wan_client)->mac[4],
 					 get_client_memptr(wan_client, num_wan_client)->mac[5]);
+	}
 
 	/* add header to IPA */
 	if(tx_prop != NULL)
@@ -6271,13 +6311,23 @@ int IPACM_Wan::handle_wan_hdr_init(uint8_t *mac_addr)
 						goto fail;
 					 }
 
-					get_client_memptr(wan_client, num_wan_client)->hdr_hdl_v4 = pHeaderDescriptor->hdr[0].hdr_hdl;
-					IPACMDBG_H("eth-client(%d) v4 full header name:%s header handle:(0x%x)\n",
+					if (!replaced)
+					{
+						get_client_memptr(wan_client, num_wan_client)->hdr_hdl_v4 = pHeaderDescriptor->hdr[0].hdr_hdl;
+						IPACMDBG_H("eth-client(%d) v4 full header name:%s header handle:(0x%x)\n",
 												 num_wan_client,
 												 pHeaderDescriptor->hdr[0].name,
 												 get_client_memptr(wan_client, num_wan_client)->hdr_hdl_v4);
 									get_client_memptr(wan_client, num_wan_client)->ipv4_header_set=true;
-
+					} else
+					{
+						get_client_memptr(wan_client, entry)->hdr_hdl_v4 = pHeaderDescriptor->hdr[0].hdr_hdl;
+						IPACMDBG_H("replaced eth-client(%d) v4 full header name:%s header handle:(0x%x)\n",
+												 entry,
+												 pHeaderDescriptor->hdr[0].name,
+												 get_client_memptr(wan_client, entry)->hdr_hdl_v4);
+									get_client_memptr(wan_client, entry)->ipv4_header_set=true;
+					}
 					break;
 				 }
 		}
@@ -6367,24 +6417,45 @@ int IPACM_Wan::handle_wan_hdr_init(uint8_t *mac_addr)
 					goto fail;
 				}
 
-				get_client_memptr(wan_client, num_wan_client)->hdr_hdl_v6 = pHeaderDescriptor->hdr[0].hdr_hdl;
-				IPACMDBG_H("eth-client(%d) v6 full header name:%s header handle:(0x%x)\n",
+				if (!replaced)
+				{
+					get_client_memptr(wan_client, num_wan_client)->hdr_hdl_v6 = pHeaderDescriptor->hdr[0].hdr_hdl;
+					IPACMDBG_H("eth-client(%d) v6 full header name:%s header handle:(0x%x)\n",
 						 num_wan_client,
 						 pHeaderDescriptor->hdr[0].name,
 									 get_client_memptr(wan_client, num_wan_client)->hdr_hdl_v6);
-
 									get_client_memptr(wan_client, num_wan_client)->ipv6_header_set=true;
+				}
+				else
+				{
+					get_client_memptr(wan_client, entry)->hdr_hdl_v6 = pHeaderDescriptor->hdr[0].hdr_hdl;
+					IPACMDBG_H("replaced eth-client(%d) v6 full header name:%s header handle:(0x%x)\n",
+							entry,
+							pHeaderDescriptor->hdr[0].name,
+							get_client_memptr(wan_client, entry)->hdr_hdl_v6);
+							get_client_memptr(wan_client, entry)->ipv6_header_set=true;
+				}
 
 				break;
 
 			}
 		}
 		/* initialize wifi client*/
-		get_client_memptr(wan_client, num_wan_client)->route_rule_set_v4 = false;
-		get_client_memptr(wan_client, num_wan_client)->route_rule_set_v6 = 0;
-		get_client_memptr(wan_client, num_wan_client)->ipv4_set = false;
-		get_client_memptr(wan_client, num_wan_client)->ipv6_set = 0;
-		num_wan_client++;
+		if (!replaced)
+		{
+			get_client_memptr(wan_client, num_wan_client)->route_rule_set_v4 = false;
+			get_client_memptr(wan_client, num_wan_client)->route_rule_set_v6 = 0;
+			get_client_memptr(wan_client, num_wan_client)->ipv4_set = false;
+			get_client_memptr(wan_client, num_wan_client)->ipv6_set = 0;
+			num_wan_client++;
+		}
+		else
+		{
+			get_client_memptr(wan_client, entry)->route_rule_set_v4 = false;
+			get_client_memptr(wan_client, entry)->route_rule_set_v6 = 0;
+			get_client_memptr(wan_client, entry)->ipv4_set = false;
+			get_client_memptr(wan_client, entry)->ipv6_set = 0;
+		}
 		header_name_count++; //keep increasing header_name_count
 		res = IPACM_SUCCESS;
 		IPACMDBG_H("eth client number: %d\n", num_wan_client);
@@ -7945,4 +8016,117 @@ int IPACM_Wan::query_mtu_size()
 
 	close(fd);
 	return IPACM_SUCCESS;
+}
+
+/* construct complete ethernet header */
+int IPACM_Wan::handle_gw_mac_renew(ipacm_event_data_all *data, int index_client)
+{
+	int index = IPACM_INVALID_INDEX;
+
+	/* checking if client has same ipv4, v6 will put future work */
+	if (data->iptype == IPA_IP_v4)
+	{
+		index = get_wan_client_index_ipv4(data->ipv4_addr);
+		if (index != IPACM_INVALID_INDEX)
+		{
+			IPACMDBG_H("Matched client index: %d\n", index);
+			IPACMDBG_H("Client MAC in cache %02x:%02x:%02x:%02x:%02x:%02x\n",
+				get_client_memptr(wan_client, index)->mac[0],
+				get_client_memptr(wan_client, index)->mac[1],
+				get_client_memptr(wan_client, index)->mac[2],
+				get_client_memptr(wan_client, index)->mac[3],
+					get_client_memptr(wan_client, index)->mac[4],
+					get_client_memptr(wan_client, index)->mac[5]);
+
+			/* check mac same or not */
+			if ((data->mac_addr[0] == get_client_memptr(wan_client, index)->mac[0]) &&
+				(data->mac_addr[1] == get_client_memptr(wan_client, index)->mac[1]) &&
+				(data->mac_addr[2] == get_client_memptr(wan_client, index)->mac[2]) &&
+				(data->mac_addr[3] == get_client_memptr(wan_client, index)->mac[3]) &&
+				(data->mac_addr[4] == get_client_memptr(wan_client, index)->mac[4]) &&
+				(data->mac_addr[5] == get_client_memptr(wan_client, index)->mac[5]))
+			{
+				IPACMDBG_H(" No need client (%d) mac renew with IPv4 (0x%x)\n", index, data->ipv4_addr);
+				return IPACM_FAILURE;
+			}
+			else
+			{
+				IPACMDBG_H(" client %d need mac renew with IPv4 (0x%x)\n", index, data->ipv4_addr);
+
+				/* Del NAT rules before ipv4 RT rules are delete */
+				if(get_client_memptr(wan_client, index)->ipv4_set == true)
+				{
+					IPACMDBG_H("Clean Nat Rules for ipv4:0x%x\n", get_client_memptr(wan_client, index)->v4_addr);
+					CtList->HandleSTAClientDelEvt(get_client_memptr(wan_client, index)->v4_addr);
+				}
+
+				/* clean up STA header / routing rule */
+				if (data->ipv4_addr == wan_v4_addr_gw && active_v4)
+				{
+					handle_route_del_evt(IPA_IP_v4, true);
+					IPACMDBG_H("Delete default v4 routing rules\n");
+					hdr_hdl_sta_v4 = 0;
+					header_set_v4 = false;
+					header_partial_default_wan_v4 = true;
+
+					if (active_v6)
+					{
+						handle_route_del_evt(IPA_IP_v6, true);
+						IPACMDBG_H("Delete default v6 routing rules\n");
+						header_partial_default_wan_v6 = true;
+					}
+					hdr_hdl_sta_v6 = 0;
+					header_set_v6 = false;
+				}
+
+				/* clean up client header routing rule entry */
+				if(delete_wan_rtrules(index, IPA_IP_v4))
+				{
+						IPACMERR("unbale to delete wan-client v4 route rules for index %d\n", index);
+						return IPACM_FAILURE;
+				}
+
+				get_client_memptr(wan_client, index)->route_rule_set_v4 = false;
+				get_client_memptr(wan_client, index)->ipv4_set = false;
+
+				IPACMDBG_H("Delete client %d header\n", index);
+				if(get_client_memptr(wan_client, index)->ipv4_header_set == true)
+				{
+					if (m_header.DeleteHeaderHdl(get_client_memptr(wan_client, index)->hdr_hdl_v4) == false)
+					{
+						IPACMERR("unable to delete client v4 header for index %d\n", index);
+						return IPACM_FAILURE;
+					}
+					get_client_memptr(wan_client, index)->ipv4_header_set = false;
+				}
+
+				if(delete_wan_rtrules(index, IPA_IP_v6))
+				{
+					IPACMERR("unbale to delete wan-client v6 route rules for index %d\n", index);
+					return IPACM_FAILURE;
+				}
+				get_client_memptr(wan_client, index)->route_rule_set_v6 = 0;
+				get_client_memptr(wan_client, index)->ipv6_set = 0;
+				if(get_client_memptr(wan_client, index)->ipv6_header_set == true)
+				{
+					if (m_header.DeleteHeaderHdl(get_client_memptr(wan_client, index)->hdr_hdl_v6) == false)
+					{
+						IPACMERR("unable to delete client v6 header for index %d\n", index);
+						return IPACM_FAILURE;
+					}
+					get_client_memptr(wan_client, index)->ipv6_header_set = false;
+				}
+				/* replacing the old mac to new_mac on same entry */
+				get_client_memptr(wan_client, index)->mac[0] = data->mac_addr[0];
+				get_client_memptr(wan_client, index)->mac[1] = data->mac_addr[1];
+				get_client_memptr(wan_client, index)->mac[2] = data->mac_addr[2];
+				get_client_memptr(wan_client, index)->mac[3] = data->mac_addr[3];
+				get_client_memptr(wan_client, index)->mac[4] = data->mac_addr[4];
+				get_client_memptr(wan_client, index)->mac[5] = data->mac_addr[5];
+				index_client = index;
+				return IPACM_SUCCESS;
+			}
+		}
+	}
+	return IPACM_FAILURE;
 }
