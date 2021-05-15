@@ -1,20 +1,32 @@
 [
   {
     "remote"      : "github",
-    "repository"  : "xiaomi-sdm660/android_kernel_xiaomi_sdm660",
-    "target_path" : "kernel/xiaomi/sdm660",
-    "branch"      : "11-EAS"
+    "repository"  : "makeaosp/kernel_msm-4.19",
+    "target_path" : "kernel/msm-4.19",
+    "branch"      : "msm-4.19"
   },
   {
     "remote"      : "github",
-    "repository"  : "xiaomi-sdm660/android_vendor_xiaomi_sdm660-common",
+    "repository"  : "OdSazib/vendor_xiaomi_sdm660-common",
     "target_path" : "vendor/xiaomi/sdm660-common",
-    "branch"      : "11"
+    "branch"      : "12"
   },
   {
     "remote"      : "github",
-    "repository"  : "xiaomi-sdm660/android_vendor_xiaomi_MiuiCamera",
-    "target_path" : "vendor/xiaomi/MiuiCamera",
-    "branch"      : "sdm660"
+    "repository"  : "makeaosp/hardware_qcom-caf_sdm660_audio",
+    "target_path" : "hardware/qcom-caf/sdm660/audio",
+    "branch"      : "12-sdm660"
+  },
+  {
+    "remote"      : "github",
+    "repository"  : "makeaosp/hardware_qcom-caf_sdm660_display",
+    "target_path" : "hardware/qcom-caf/sdm660/display",
+    "branch"      : "12-sdm660"
+  },
+  {
+    "remote"      : "github",
+    "repository"  : "makeaosp/hardware_qcom-caf_sdm660_media",
+    "target_path" : "hardware/qcom-caf/sdm660/media",
+    "branch"      : "12-sdm660"
   }
 ]
