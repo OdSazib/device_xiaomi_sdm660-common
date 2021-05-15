@@ -4,15 +4,9 @@
 # Biometric
 /(vendor|system/vendor)/bin/hw/android\.hardware\.biometrics\.fingerprint@2\.1-service\.xiaomi_sdm660                       u:object_r:hal_fingerprint_sdm660_exec:s0
 
-# Biometric
-/data/misc/camera                                                                                                           u:object_r:camera_data_file:s0
-
 # blkio
 /dev/blkio(/.*)?                                                                                                            u:object_r:blkio_dev:s0
 /dev/blkio/background(/.*)?                                                                                                 u:object_r:blkio_dev:s0
-
-# Debug
-/sys/kernel/debug/mmc0/mmc0:0001/ext_csd                                                                                    u:object_r:debugfs_mmc:s0
 
 # Executables
 /vendor/bin/sh                                                                                                              u:object_r:vendor_shell_exec:s0
@@ -43,9 +37,6 @@
 
 # Light HAL
 /(vendor|system/vendor)/bin/hw/android\.hardware\.light@2\.0-service\.xiaomi_sdm660                                         u:object_r:hal_light_default_exec:s0
-
-# Mlipay
-/(vendor|system/vendor)/bin/mlipayd@1.1                                                                                     u:object_r:hal_mlipay_default_exec:s0
 
 # Notification LED
 /devices/soc/800f000.qcom,spmi/spmi-0/spmi0-03/800f000.qcom,spmi:qcom,pm660l@3:qcom,leds@d000/leds/white/max_brightness     u:object_r:sysfs_graphics:s0

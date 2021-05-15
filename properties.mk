@@ -1,9 +1,3 @@
-# Apex
-ifeq ($(ENABLE_APEX), true)
-PRODUCT_PRODUCT_PROPERTIES += \
-     ro.apex.updatable=true
-endif
-
 # ART
 PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat64.enabled=true \
@@ -106,14 +100,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     vendor.audio.feature.vbat.enable=true \
     vendor.audio.feature.wsa.enable=false
 
-ifneq ($(filter jason,$(TARGET_DEVICE)),)
-PRODUCT_PROPERTY_OVERRIDES += \
-    vendor.audio.feature.spkr_prot.enable=false
-else
-PRODUCT_PROPERTY_OVERRIDES += \
-    vendor.audio.feature.spkr_prot.enable=true
-endif
-
 # Bluetooth
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.bluetooth.a2dp_offload.disabled=false \
@@ -145,14 +131,6 @@ PRODUCT_PRODUCT_PROPERTIES += \
 # Codec2 switch
 PRODUCT_PROPERTY_OVERRIDES += \
     debug.media.codec2=2
-
-# Dirac
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.audio.soundfx.dirac=true \
-    persist.audio.dirac.speaker=true \
-    persist.dirac.acs.controller=qem \
-    persist.dirac.acs.ignore_error=1 \
-    persist.dirac.acs.storeSettings=1
 
 # Display
 PRODUCT_PROPERTY_OVERRIDES += \

@@ -94,6 +94,7 @@ TARGET_NO_BOOTLOADER := true
 
 # Board
 TARGET_BOARD_PLATFORM := sdm660
+OVERRIDE_QCOM_HARDWARE_VARIANT := sdm660
 
 # Build Rules
 BUILD_BROKEN_DUP_RULES := true
@@ -126,9 +127,6 @@ TARGET_USES_ION := true
 # DRM
 TARGET_ENABLE_MEDIADRM_64 := true
 
-# EXFAT
-TARGET_EXFAT_DRIVER := sdfat
-
 # GPS
 BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := default
 GNSS_HIDL_VERSION := 2.1
@@ -154,11 +152,8 @@ BOARD_KERNEL_CMDLINE += usbcore.autosuspend=7
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
-KERNEL_LD := LD=ld.lld
 TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
-TARGET_KERNEL_VERSION := 4.4
-TARGET_KERNEL_SOURCE := kernel/xiaomi/sdm660
 
 # Enable stats logging in LMKD
 TARGET_LMKD_STATS_LOG := true
@@ -204,15 +199,6 @@ BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
 # QCOM hardware
 BOARD_USES_QCOM_HARDWARE := true
 TARGET_USES_QCOM_BSP := false
-
-# Recovery
-ifneq ($(filter lavender,$(TARGET_DEVICE)),)
-TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/rootdir/etc/fstab_A.qcom
-else ifeq ($(ENABLE_AB), true)
-TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/rootdir/etc/fstab_AB.qcom
-else
-TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/rootdir/etc/fstab.qcom
-endif
 
 # Renderscript
 OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
