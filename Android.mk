@@ -108,14 +108,28 @@ ALL_DEFAULT_INSTALLED_MODULES += \
     $(RFS_MSM_MPSS_SYMLINKS) \
     $(RFS_MSM_SLPI_SYMLINKS)
 
-EGL_SYMLINKS := $(TARGET_OUT_VENDOR)/lib/libGLESv2_adreno.so \
-    $(TARGET_OUT_VENDOR)/lib/libEGL_adreno.so \
-    $(TARGET_OUT_VENDOR)/lib64/libEGL_adreno.so
-$(EGL_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
+EGL_LIBRARIES := \
+	libEGL_adreno.so \
+	libGLESv2_adreno.so \
+	libq3dtools_adreno.so
+
+EGL_32_SYMLINKS := $(addprefix $(TARGET_OUT_VENDOR)/lib/,$(notdir $(EGL_LIBRARIES)))
+$(EGL_32_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
+	@echo "EGL 32 lib link: $@"
 	@mkdir -p $(dir $@)
+	@rm -rf $@
 	$(hide) ln -sf egl/$(notdir $@) $@
 
-ALL_DEFAULT_INSTALLED_MODULES += $(EGL_SYMLINKS)
+EGL_64_SYMLINKS := $(addprefix $(TARGET_OUT_VENDOR)/lib64/,$(notdir $(EGL_LIBRARIES)))
+$(EGL_64_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
+	@echo "EGL lib link: $@"
+	@mkdir -p $(dir $@)
+	@rm -rf $@
+	$(hide) ln -sf egl/$(notdir $@) $@
+
+ALL_DEFAULT_INSTALLED_MODULES += \
+	$(EGL_32_SYMLINKS) \
+	$(EGL_64_SYMLINKS)
 
 METADATA_SYMLINKS := $(TARGET_ROOT_OUT)/metadata
 $(METADATA_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
