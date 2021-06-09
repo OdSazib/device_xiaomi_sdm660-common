@@ -21,7 +21,7 @@
     <!-- version section contains a “version” tag in the form “major.minor” e.g version=”1.0” -->
 
     <!-- Global configuration Decalaration -->
-    <globalConfiguration speaker_drc_enabled="true"/>
+    <globalConfiguration speaker_drc_enabled="true" call_screen_mode_supported="true"/>
 
 
     <!-- Modules section:
@@ -164,6 +164,12 @@
                          flags="AUDIO_INPUT_FLAG_VOIP_TX">
                     <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
                              samplingRates="8000,16000,32000,48000" channelMasks="AUDIO_CHANNEL_IN_MONO"/>
+                </mixPort>
+                <mixPort name="incall_music_uplink" role="source"
+                             flags="AUDIO_OUTPUT_FLAG_INCALL_MUSIC">
+                        <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                            samplingRates="8000,16000,48000"
+                            channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
                 </mixPort>
                 <mixPort name="surround_sound" role="sink">
                     <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
@@ -311,7 +317,7 @@
                 <route type="mix" sink="USB Headset Out"
                        sources="primary output,raw,deep_buffer,direct_pcm,compressed_offload,voip_rx,hifi_playback"/>
                 <route type="mix" sink="Telephony Tx"
-                       sources="voice_tx"/>
+                       sources="voice_tx,incall_music_uplink"/>
                 <route type="mix" sink="voice_rx"
                        sources="Telephony Rx"/>
                 <route type="mix" sink="primary input"
