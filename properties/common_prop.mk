@@ -172,13 +172,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # GPS
 PRODUCT_PROPERTY_OVERRIDES += \
-    persist.backup.ntpServer="0.pool.ntp.org" \
     persist.vendor.overlay.izat.optin=rro
-    
-# Graphics
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.hardware.egl=adreno \
-    ro.hardware.vulkan=adreno
 
 # HAL1 apps list
 PRODUCT_PROPERTY_OVERRIDES += \
