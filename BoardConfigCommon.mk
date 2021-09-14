@@ -204,6 +204,7 @@ OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
 
 # RIL
 PROTOBUF_SUPPORTED := true
+ENABLE_VENDOR_RIL_SERVICE := true
 
 # SELinux
 include device/qcom/sepolicy-legacy-um/SEPolicy.mk
