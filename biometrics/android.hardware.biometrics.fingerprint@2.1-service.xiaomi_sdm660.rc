@@ -52,6 +52,7 @@ on post-fs-data
     chown system system /data/vendor_de/0/fpdata/user.db
 
 service vendor.fps_hal /vendor/bin/hw/android.hardware.biometrics.fingerprint@2.1-service.xiaomi_sdm660
+    interface android.hardware.biometrics.fingerprint@2.1::IBiometricsFingerprint default
     class late_start
     user system
     group system uhid input
