@@ -12,17 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-soong_namespace {
-    imports: [
-        "hardware/google/interfaces",
-        "hardware/google/pixel"
-    ],
-}
-
-prebuilt_hidl_interfaces {
-    name: "hidl_embmssl_interface",
-    interfaces: [
-        "vendor.qti.hardware.embmssl@1.0::IEmbms",
-        "vendor.qti.hardware.embmssl@1.1::IEmbms",
-    ],
+cc_library_shared {
+    name: "android.hidl.base@1.0",
+    shared_libs: ["libhidlbase"],
+    system_ext_specific: true,
+    vendor_available: true,
 }
