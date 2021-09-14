@@ -44,11 +44,6 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <fqname>@1.0::IAuthSecret/default</fqname>
     </hal>
     <hal format="hidl">
-        <name>android.hardware.biometrics.fingerprint</name>
-        <transport>hwbinder</transport>
-        <fqname>@2.1::IBiometricsFingerprint/default</fqname>
-    </hal>
-    <hal format="hidl">
         <name>android.hardware.bluetooth</name>
         <transport>hwbinder</transport>
         <version>1.0</version>
