@@ -5,8 +5,6 @@
       "Path": "/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq",
       "Values": [
         "9999999",
-        "1747200",
-        "1536000",
         "1401600",
         "1113600"
       ],
@@ -18,10 +16,8 @@
       "Path": "/sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq",
       "Values": [
         "9999999",
-        "1536000",
         "1401600",
         "1113600",
-        "902400",
         "633600"
       ],
       "ResetOnInit": true
@@ -31,9 +27,6 @@
       "Path": "/sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq",
       "Values": [
         "9999999",
-        "2150400",
-        "1958400",
-        "1747200",
         "1401600"
       ],
       "DefaultIndex": 0,
@@ -44,8 +37,6 @@
       "Path": "/sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq",
       "Values": [
         "9999999",
-        "1958400",
-        "1747200",
         "1401600",
         "1113600"
       ],
@@ -57,7 +48,9 @@
       "Values": [
         "647000000",
         "588000000",
-        "465000000"
+        "465000000",
+        "370000000",
+        "266000000"
       ],
       "DefaultIndex": 0,
       "ResetOnInit": true
@@ -67,9 +60,11 @@
       "Path": "/sys/class/kgsl/kgsl-3d0/devfreq/min_freq",
       "Values": [
         "647000000",
+        "588000000",
         "465000000",
         "370000000",
-        "266000000"
+        "266000000",
+        "160000000"
       ],
       "ResetOnInit": true
     },
@@ -217,28 +212,6 @@
       "Values": [
         "EXPENSIVE_RENDERING",
         ""
-      ],
-      "Type": "Property"
-    },
-    {
-      "Name": "Dex2oatThreads",
-      "Path": "vendor.powerhal.dalvik.vm.dex2oat-threads",
-      "Values": [
-          "1",
-          "2",
-          "4",
-          "6"
-      ],
-      "Type": "Property"
-    },
-    {
-      "Name": "Dex2oatCPUSet",
-      "Path": "vendor.powerhal.dalvik.vm.dex2oat-cpu-set",
-      "Values": [
-          "2,3",
-          "0,1,2,3",
-          "0,1,2,3,4,5",
-          "0,1,2,3,4,5,6,7"
       ],
       "Type": "Property"
     }
@@ -401,66 +374,6 @@
       "Value": "647000000"
     },
     {
-      "PowerHint": "THERMAL_fps-therm-monitor_LIGHT",
-      "Node": "Dex2oatThreads",
-      "Duration": 0,
-      "Value": "4"
-    },
-    {
-      "PowerHint": "THERMAL_fps-therm-monitor_LIGHT",
-      "Node": "Dex2oatCPUSet",
-      "Duration": 0,
-      "Value": "0,1,2,3,4,5"
-    },
-    {
-      "PowerHint": "THERMAL_fps-therm-monitor_MODERATE",
-      "Node": "Dex2oatThreads",
-      "Duration": 0,
-      "Value": "2"
-    },
-    {
-      "PowerHint": "THERMAL_fps-therm-monitor_MODERATE",
-      "Node": "Dex2oatCPUSet",
-      "Duration": 0,
-      "Value": "0,1,2,3"
-    },
-    {
-      "PowerHint": "THERMAL_fps-therm-monitor_SEVERE",
-      "Node": "Dex2oatThreads",
-      "Duration": 0,
-      "Value": "1"
-    },
-    {
-      "PowerHint": "THERMAL_fps-therm-monitor_SEVERE",
-      "Node": "Dex2oatCPUSet",
-      "Duration": 0,
-      "Value": "2,3"
-    },
-    {
-      "PowerHint": "THERMAL_fps-therm-monitor_CRITICAL",
-      "Node": "Dex2oatThreads",
-      "Duration": 0,
-      "Value": "1"
-    },
-    {
-      "PowerHint": "THERMAL_fps-therm-monitor_CRITICAL",
-      "Node": "Dex2oatCPUSet",
-      "Duration": 0,
-      "Value": "2,3"
-    },
-    {
-      "PowerHint": "THERMAL_fps-therm-monitor_EMERGENCY",
-      "Node": "Dex2oatThreads",
-      "Duration": 0,
-      "Value": "1"
-    },
-    {
-      "PowerHint": "THERMAL_fps-therm-monitor_EMERGENCY",
-      "Node": "Dex2oatCPUSet",
-      "Duration": 0,
-      "Value": "2,3"
-    },
-    {
       "PowerHint": "Flipendo",
       "Node": "CPULittleClusterMaxFreq",
       "Duration": 0,
@@ -470,7 +383,7 @@
       "PowerHint": "Flipendo",
       "Node": "CPUBigClusterMaxFreq",
       "Duration": 0,
-      "Value": "1747200"
+      "Value": "1401600"
     }
   ]
 }
