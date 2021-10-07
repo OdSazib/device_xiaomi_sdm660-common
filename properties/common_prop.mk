@@ -226,6 +226,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.vendor.qcomsysd.enabled=1 \
     ro.vendor.extension_library=libqti-perfd-client.so
 
+# SOC
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.soc.manufacturer=Qualcomm \
+    ro.soc.model=SDM660
+
 # Radio
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.data.df.dev_name=rmnet_usb0 \
