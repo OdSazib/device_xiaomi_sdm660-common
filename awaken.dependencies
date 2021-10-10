@@ -28,11 +28,5 @@
     "repository"  : "makeaosp/hardware_qcom-caf_sdm660_media",
     "target_path" : "hardware/qcom-caf/sdm660/media",
     "branch"      : "12-sdm660"
-  },
-  {
-    "remote"      : "github",
-    "repository"  : "makeaosp/vendor_qcom_opensource_thermal-hal",
-    "target_path" : "vendor/qcom/opensource/thermal-hal",
-    "branch"      : "12-sdm660"
   }
 ]
