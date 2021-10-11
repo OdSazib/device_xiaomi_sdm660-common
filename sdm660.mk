@@ -228,11 +228,6 @@ PRODUCT_PACKAGES += \
     vendor.display.config@2.0 \
     vendor.display.config@2.0.vendor
 
-# Device Parts
-PRODUCT_PACKAGES += \
-    DeviceDoze \
-    DeviceSettings
-
 # DRM
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.0.vendor \
