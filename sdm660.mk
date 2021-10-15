@@ -126,7 +126,7 @@ PRODUCT_PACKAGES += \
 # Bluetooth
 PRODUCT_PACKAGES += \
     audio.bluetooth.default \
-    android.hardware.bluetooth.audio@2.0-impl \
+    android.hardware.bluetooth.audio@2.1-impl \
     android.hardware.bluetooth@1.1.vendor \
     bt_stack.conf \
     liba2dpoffload \
