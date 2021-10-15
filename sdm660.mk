@@ -212,7 +212,9 @@ PRODUCT_COPY_FILES += \
 # fwk-detect
 PRODUCT_PACKAGES += \
     libqti_vndfwk_detect \
-    libqti_vndfwk_detect.vendor
+    libqti_vndfwk_detect.vendor \
+    libvndfwk_detect_jni.qti \
+    libvndfwk_detect_jni.qti.vendor
 
 # GMS
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
