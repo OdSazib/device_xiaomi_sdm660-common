@@ -200,7 +200,6 @@ PRODUCT_PACKAGES += \
     libqdMetaData \
     libqdMetaData.vendor \
     libstagefright_enc_common \
-    libtinyxml \
     vendor.display.config@2.0 \
     vendor.display.config@2.0.vendor
 
