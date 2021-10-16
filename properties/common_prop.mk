@@ -236,10 +236,17 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Radio
 PRODUCT_PROPERTY_OVERRIDES += \
-    persist.data.df.dev_name=rmnet_usb0 \
+    persist.dbg.volte_avail_ovr=1 \
+    persist.dbg.vt_avail_ovr=1 \
+    persist.dbg.wfc_avail_ovr=1 \
+    persist.dbg.ims_volte_enable=1 \
     persist.debug.coresight.config=stm-events \
     persist.radio.multisim.config=dsds \
+    persist.vendor.data.iwlan.enable=true \
+    persist.vendor.data.mode=concurrent \
     persist.vendor.dpmhalservice.enable=1 \
+    persist.vendor.ims.disableADBLogs=1 \
+    persist.vendor.ims.disableIMSLogs=1 \
     persist.vendor.qti.telephony.vt_cam_interface=1 \
     persist.vendor.radio.add_power_save=1 \
     persist.vendor.radio.apm_sim_not_pwdn=1 \
@@ -248,9 +255,18 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.vendor.radio.data_con_rprt=1 \
     persist.vendor.radio.procedure_bytes=SKIP \
     persist.vendor.radio.rat_on=combine \
+    persist.vendor.radio.redir_party_num=1 \
     persist.vendor.radio.sib16_support=1 \
+    persist.vendor.radio.data_ltd_sys_ind=1 \
+    persist.vendor.radio.force_ltd_sys_ind=1 \
+    persist.vendor.radio.manual_nw_rej_ct=1 \
+    persist.vendor.radio.mt_sms_ack=30 \
+    persist.vendor.radio.procedure_bytes=SKIP \
+    persist.radio.calls.on.ims=1 \
     ro.telephony.iwlan_operation_mode=legacy \
     ro.vendor.use_data_netmgrd=true \
+    ro.vendor.qti.va_aosp.support=1 \
+    ro.telephony.default_cdma_sub=0 \
     ro.telephony.default_network=22,20 \
     vendor.rild.libpath=/vendor/lib64/libril-qc-hal-qmi.so
 
@@ -260,14 +276,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.enable.sglscale=1 \
     debug.sf.disable_hwc=0 \
     debug.sf.gpu_comp_tiling=1 \
-    debug.sf.recomputecrop=0 \
-    persist.dbg.ims_volte_enable=1 \
-    persist.dbg.wfc_avail_ovr=1 \
-    persist.vendor.ims.disableADBLogs=1 \
-    persist.vendor.ims.disableIMSLogs=1 \
-    persist.vendor.radio.data_ltd_sys_ind=1 \
-    persist.vendor.radio.force_ltd_sys_ind=1 \
-    persist.radio.calls.on.ims=1
+    debug.sf.recomputecrop=0
 
 # Sensor
 PRODUCT_PROPERTY_OVERRIDES += \
