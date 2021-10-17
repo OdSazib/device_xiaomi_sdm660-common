@@ -15,9 +15,10 @@
  */
 
 #define ATRACE_TAG (ATRACE_TAG_POWER | ATRACE_TAG_HAL)
-#define LOG_TAG "android.hardware.power-service.xiaomi_sdm660.ext-libperfmgr"
+#define LOG_TAG "android.hardware.power-service.pixel.ext-libperfmgr"
 
 #include "PowerExt.h"
+#include "PowerSessionManager.h"
 
 #include <mutex>
 
@@ -46,6 +47,7 @@ ndk::ScopedAStatus PowerExt::setMode(const std::string &mode, bool enabled) {
     } else {
         mHintManager->EndHint(mode);
     }
+    PowerSessionManager::getInstance()->updateHintMode(mode, enabled);
 
     return ndk::ScopedAStatus::ok();
 }
