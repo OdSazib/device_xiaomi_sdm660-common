@@ -259,6 +259,9 @@ ro.vendor.sensors.sta_detect=true
 ro.soc.manufacturer=Qualcomm
 ro.soc.model=SDM660
 
+# System
+persist.sys.binary_xml=false
+
 # System restart
 ro.build.shutdown_timeout=2
 
