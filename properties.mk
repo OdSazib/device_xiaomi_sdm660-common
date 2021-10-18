@@ -403,6 +403,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.surface_flinger.set_touch_timer_ms=5000 \
     ro.surface_flinger.set_idle_timer_ms=9000
 
+# System
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.binary_xml=false
+
 # System restart
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     persist.vendor.ssr.restart_level=ALL_ENABLE
