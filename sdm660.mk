@@ -276,8 +276,8 @@ PRODUCT_PACKAGES += \
     org.ifaa.android.manager
 
 # IFAA JAR
-PRODUCT_BOOT_JARS += \
-    org.ifaa.android.manager
+# PRODUCT_BOOT_JARS += \
+#    org.ifaa.android.manager
 
 # IMS
 PRODUCT_PACKAGES += \
@@ -285,8 +285,8 @@ PRODUCT_PACKAGES += \
     ims_ext_common.xml \
 
 # IMS JAR
-PRODUCT_BOOT_JARS += \
-    ims-ext-common
+# PRODUCT_BOOT_JARS += \
+#    ims-ext-common
 
 # Init
 PRODUCT_PACKAGES += \
@@ -598,5 +598,5 @@ PRODUCT_PACKAGES += \
     libnl
 
 # WiFi Display JAR
-PRODUCT_BOOT_JARS += \
-    WfdCommon
+# PRODUCT_BOOT_JARS += \
+#    WfdCommon
