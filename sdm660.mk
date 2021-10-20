@@ -4,12 +4,6 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-# Board
-PRODUCT_USES_QCOM_HARDWARE := true
-PRODUCT_BOARD_PLATFORM := sdm660
-TARGET_BOARD_PLATFORM := sdm660
-OVERRIDE_QCOM_HARDWARE_VARIANT := sdm660
-
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base_telephony.mk)
@@ -124,10 +118,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     android.hardware.authsecret@1.0-service
 
-# ATRACE_HAL
-PRODUCT_PACKAGES += \
-    android.hardware.atrace@1.0-service
-
 # Biometrics
 PRODUCT_PACKAGES += \
     android.hardware.biometrics.fingerprint@2.1-service.xiaomi_sdm660
@@ -143,9 +133,6 @@ PRODUCT_PACKAGES += \
     libldacBT_dec \
     libsndmonitor \
     vendor.qti.hardware.bluetooth_audio@2.0.vendor
-
-# Boot animation
-TARGET_BOOTANIMATION_SIZE := 1080p
 
 # Camera
 PRODUCT_PACKAGES += \
@@ -210,9 +197,10 @@ PRODUCT_PACKAGES += \
     vendor.display.config@2.0 \
     vendor.display.config@2.0.vendor
 
-# DeviceDoze
+# Device Parts
 PRODUCT_PACKAGES += \
-    DeviceDoze
+    DeviceDoze \
+    DeviceSettings
 
 # DRM
 PRODUCT_PACKAGES += \
@@ -522,6 +510,10 @@ PRODUCT_SOONG_NAMESPACES += \
     hardware/google/interfaces \
     hardware/google/pixel
 
+# Sqlite
+PRODUCT_PACKAGES += \
+    sqlite3
+
 # Tetheroffload
 PRODUCT_PACKAGES += \
     ipacm \
@@ -587,11 +579,3 @@ PRODUCT_PACKAGES += \
 # WiFi Display JAR
 PRODUCT_BOOT_JARS += \
     WfdCommon
-
-# DeviceSettings
-PRODUCT_PACKAGES += \
-   DeviceSettings
-   
-# IPA
-USE_DEVICE_SPECIFIC_DATA_IPA_CFG_MGR := true
-USE_DEVICE_SPECIFIC_IPACFG_MGR := true
