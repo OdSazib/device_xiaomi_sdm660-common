@@ -533,11 +533,7 @@ PRODUCT_PACKAGES += \
 
 # Thermal
 PRODUCT_PACKAGES += \
-    android.hardware.thermal@2.0-service.qti
-
-# Thermal Controller
-PRODUCT_PACKAGES += \
-   ThermalController
+    android.hardware.thermal@2.0-service.xiaomi_sdm660.qti
 
 # Thermal Conf
 PRODUCT_COPY_FILES += \
