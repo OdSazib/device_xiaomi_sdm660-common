@@ -514,7 +514,7 @@ PRODUCT_PACKAGES += \
 
 # Thermal
 PRODUCT_PACKAGES += \
-    android.hardware.thermal@2.0-service.mock
+    android.hardware.thermal@2.0-service.xiaomi_sdm660.qti
 
 # Thermal Conf
 PRODUCT_COPY_FILES += \
