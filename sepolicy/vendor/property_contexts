@@ -45,5 +45,4 @@ ro.build.software.version               u:object_r:telephony_status_prop:s0
 ro.product.mod_device                   u:object_r:telephony_status_prop:s0
 
 # Thermal engine
-persist.sys.thermal.                    u:object_r:thermal_engine_prop:s0
-sys.thermal.                            u:object_r:thermal_engine_prop:s0
+vendor.thermal.config                   u:object_r:vendor_thermal_prop:s0
