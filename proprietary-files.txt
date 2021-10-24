@@ -676,9 +676,6 @@ vendor/radio/qcril_database/upgrade/8_version_update_ecc_table.sql|a0603a5c46e8e
 vendor/bin/rmt_storage|2633a072880c39df55f1ba1225438a79911a42e3
 vendor/etc/init/vendor.qti.rmt_storage.rc|bc212c6353c2ded44ae4d759605fbbe55aa4fa3f
 
-# Radio - Telephony - from jasmine-user-10-QKQ1.190910.002-V11.0.4.0.QDIMIXM
--system_ext/app/datastatusnotification/datastatusnotification.apk|272156d88ac5a05f76fcea7f1a31087e1acbcd85
-
 # Radio - Telephony - from qcom-common-AOSPA
 -product/app/CallFeaturesSetting/CallFeaturesSetting.apk|2f579f81f4030fe2116c3d248229c260df7c0373
 -system/framework/tcmclient.jar|cdd1ea7143a5a7acc3909b5cfa706650179647c7
