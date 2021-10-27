@@ -379,6 +379,10 @@ DEVICE_PACKAGE_OVERLAYS += \
 
 # RRO configuration
 TARGET_USES_RRO := true
+
+# Overlay-Monet
+PRODUCT_PACKAGE_OVERLAYS += $(COMMON_PATH)/overlay-monet
+PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(COMMON_PATH)/overlay-monet/frameworks/base/packages/SystemUI
     
 # Permissions
 PRODUCT_COPY_FILES += \
