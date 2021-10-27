@@ -13,12 +13,6 @@
   },
   {
     "remote"      : "github",
-    "repository"  : "OdSazib/vendor_xiaomi_MiuiCamera",
-    "target_path" : "vendor/xiaomi/MiuiCamera",
-    "branch"      : "sdm660"
-  },
-  {
-    "remote"      : "github",
     "repository"  : "OdSazib/android_hardware_qcom_display",
     "target_path" : "hardware/qcom-caf/sdm660/display",
     "branch"      : "11"
