@@ -121,6 +121,10 @@ vendor.camera.aux.packagelist=com.google.android.GoogleCamera,com.android.camera
 # Codec2 switch
 debug.media.codec2=2
 
+# Data
+persist.data.df.dev_name=rmnet_usb0
+persist.vendor.data.profile_update=true
+
 # DRM
 drm.service.enabled=true
 
@@ -174,6 +178,12 @@ ro.com.android.dataroaming=false
 ro.vendor.qti.sys.fw.bservice_enable=true
 ro.frp.pst=/dev/block/bootdevice/by-name/frp
 
+# Netflix
+ro.netflix.bsp_rev=Q660-13149-1
+
+# OEM Unlock reporting
+ro.oem_unlock_supported=1
+
 # QCOM
 persist.vendor.qcomsysd.enabled=1
 ro.vendor.extension_library=libqti-perfd-client.so
@@ -185,7 +195,14 @@ persist.dbg.vt_avail_ovr=1
 persist.dbg.wfc_avail_ovr=1
 persist.dbg.ims_volte_enable=1
 persist.debug.coresight.config=stm-events
+persist.radio.add_power_save=1
+persist.radio.aosp_usr_pref_sel=true
+persist.radio.calls.on.ims=1
+persist.radio.data_con_rprt=1
 persist.radio.multisim.config=dsds
+persist.radio.VT_CAM_INTERFACE=2
+persist.sys.fflag.override.settings_provider_model=false
+persist.sys.fflag.override.settings_network_and_internet_v2=true
 persist.vendor.data.iwlan.enable=true
 persist.vendor.data.mode=concurrent
 persist.vendor.dpmhalservice.enable=1
@@ -197,6 +214,7 @@ persist.vendor.radio.enableadvancedscan=false
 persist.vendor.radio.atfwd.start=true
 persist.vendor.radio.custom_ecc=1
 persist.vendor.radio.data_con_rprt=1
+persist.vendor.radio.enable_temp_dds=true
 persist.vendor.radio.procedure_bytes=SKIP
 persist.vendor.radio.rat_on=combine
 persist.vendor.radio.redir_party_num=1
@@ -206,7 +224,7 @@ persist.vendor.radio.force_ltd_sys_ind=1
 persist.vendor.radio.manual_nw_rej_ct=1
 persist.vendor.radio.mt_sms_ack=30
 persist.vendor.radio.procedure_bytes=SKIP
-persist.radio.calls.on.ims=1
+ril.subscription.types=RUIM,NV
 ro.telephony.iwlan_operation_mode=legacy
 ro.vendor.use_data_netmgrd=true
 ro.vendor.qti.va_aosp.support=1
