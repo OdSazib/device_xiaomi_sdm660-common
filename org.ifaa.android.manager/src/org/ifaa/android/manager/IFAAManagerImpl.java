@@ -38,9 +38,9 @@ public class IFAAManagerImpl extends IFAAManagerV4 {
     private static final String CA_CERT_ALIAS_DELIMITER = " ";
 
     private static final String INTERFACE_DESCRIPTOR =
-            "vendor.xiaomi.hardware.mlipay@1.0::IMlipayService";
+            "vendor.xiaomi.hardware.mlipay@1.1::IMlipayService";
     private static final String SERVICE_NAME =
-            "vendor.xiaomi.hardware.mlipay@1.0::IMlipayService";
+            "vendor.xiaomi.hardware.mlipay@1.1::IMlipayService";
     private static final String TAG = "IfaaManagerImpl";
 
     private static final String mIfaaActName = "org.ifaa.android.manager.IFAAService";
