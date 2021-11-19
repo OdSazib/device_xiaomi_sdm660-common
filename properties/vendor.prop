@@ -110,13 +110,13 @@ vendor.hw.fm.init=0
 ro.kernel.ebpf.supported=true
 
 # Camera
-persist.vendor.camera.dual.isp.sync=0
-persist.vendor.camera.HAL3.enabled=1
-persist.vendor.camera.eis.enable=1
-persist.vendor.camera.exif.make=Xiaomi
-vendor.camera.aux.packageblacklist=com.discord
 camera.aux.packagelist=com.google.android.GoogleCamera,com.android.camera,org.codeaurora.snapcam
+persist.vendor.camera.HAL3.enabled=1
+persist.vendor.camera.preview.ubwc=0
+vendor.camera.aux.packageblacklist=com.discord
 vendor.camera.aux.packagelist=com.google.android.GoogleCamera,com.android.camera,org.codeaurora.snapcam
+vendor.video.disable.ubwc=1
+vidc.enc.dcvs.extra-buff-count=2
 
 # Codec2 switch
 debug.media.codec2=2
@@ -167,7 +167,6 @@ media.stagefright.thumbnail.prefer_hw_codecs=true
 vendor.vidc.dec.enable.downscalar=1
 vendor.vidc.enc.disable.pq=true
 vendor.vidc.enc.disable_bframes=1
-vidc.enc.dcvs.extra-buff-count=2
 media.stagefright.enable-http=true
 media.stagefright.enable-aac=true
 media.aac_51_output_enabled=true
