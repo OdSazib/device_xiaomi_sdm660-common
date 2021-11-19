@@ -22,6 +22,11 @@ $(call inherit-product, vendor/xiaomi/sdm660-common/sdm660-common-vendor.mk)
 # Common Tree Path
 COMMON_PATH := device/xiaomi/sdm660-common
 
+# Boot control
+PRODUCT_PACKAGES += \
+    android.hardware.health@2.1-impl-qti \
+    android.hardware.health@2.1-service
+
 # A/B
 ifeq ($(ENABLE_AB), true)
 AB_OTA_POSTINSTALL_CONFIG += \
@@ -38,9 +43,7 @@ PRODUCT_PACKAGES += \
     android.hardware.boot@1.2-impl \
     android.hardware.boot@1.2-impl.recovery \
     android.hardware.boot@1.2-service \
-    android.hardware.health@2.1-impl \
-    android.hardware.health@2.1-service \
-    android.hardware.health@2.1-impl.recovery \
+    android.hardware.health@2.1-impl-qti.recovery \
     bootctrl.sdm660 \
     bootctrl.sdm660.recovery
 
