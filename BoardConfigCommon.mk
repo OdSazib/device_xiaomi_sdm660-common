@@ -211,9 +211,6 @@ else
 TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/rootdir/etc/fstab.qcom
 endif
 
-# Renderscript
-OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
-
 # RIL
 PROTOBUF_SUPPORTED := true
 ENABLE_VENDOR_RIL_SERVICE := true
