@@ -38,6 +38,8 @@ PRODUCT_PACKAGES += \
     android.hardware.boot@1.2-impl \
     android.hardware.boot@1.2-impl.recovery \
     android.hardware.boot@1.2-service \
+    android.hardware.health@2.1-impl \
+    android.hardware.health@2.1-service \
     android.hardware.health@2.1-impl.recovery \
     bootctrl.sdm660 \
     bootctrl.sdm660.recovery
