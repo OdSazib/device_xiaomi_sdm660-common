@@ -345,7 +345,6 @@ vendor/lib64/liblocationservice.so|3f6f69cb520d9f808409195b16951eb82b4f945a
 vendor/lib64/liblocationservice_glue.so|7b3acc64d7f3cc0c78d3164bf637115fd4bac90b
 vendor/lib64/liblowi_client.so|9db4ce5f62b6be6b3bf29199a36bdf7183606897
 vendor/lib64/liblowi_wifihal.so|6a857d771ca8a284c9adf7fcc9edf36bb179177c
-vendor/lib64/libmmosal.so|e9fdb48163e92b089cea0c397723a8416436c272
 vendor/lib64/libqcc_file_agent.so|3975917c7f591f2748d5ef89bd8ec13605f38945
 vendor/lib64/libslimclient.so|1ab57b58064fce9e738c4cd815d2620a113641e3
 vendor/lib64/libxtadapter.so|48cc26710658fc4e704e4cee73187166d1d2bce6
@@ -455,42 +454,41 @@ vendor/lib64/libgcs-ipc.so|6176c690c105e85d3db5fc674659813b1555ca12
 vendor/lib64/libgcs-osal.so|a1c5c73662cfaeaf462fe8f30fac6abe991e0f2a
 vendor/lib64/libgcs.so|f3276fa7696e394d5679b01166b560043660a5ca
 
-# Media - from LA.UM.8.2.1.r1-05600-sdm660
-vendor/lib/libAlacSwDec.so|d082d6eeedd8a84bd1b720d515ede48e74392dd4
-vendor/lib/libApeSwDec.so|12c5bfd798a14114a58e55c0713e8e238ccbb83f
-vendor/lib/libFlacSwDec.so|ad62260c534b60df028f5c5741086592aad7e220
-vendor/lib/libI420colorconvert.so|9411d06fa9b40d0f43ac18c9f3a8ef50299d2214
-vendor/lib/libOmxAacDec.so|29a83e21d270b0b9a648054913569de98bb12076
-vendor/lib/libOmxAlacDec.so|12888f60f3350d74442ec27200fbca3f0c7ced50
-vendor/lib/libOmxAlacDecSw.so|6bec19c7c1cac2036480b04e3fb998f473433e08
-vendor/lib/libOmxAmrDec.so|1c676febb9a996f6a1956effaa32110e082cd863
-vendor/lib/libOmxAmrwbplusDec.so|20f5a87244108f66b9412c2a674e7f599c31356d
-vendor/lib/libOmxApeDec.so|7423bdb478efaac50b656e7bde1566acd375d67b
-vendor/lib/libOmxApeDecSw.so|515cba101287c9a753b32cb29f415c0b48abeed9
-vendor/lib/libOmxDsdDec.so|1793f853c171f2317187df2cebefe07d17417c3d
-vendor/lib/libOmxEvrcDec.so|124ef7556aaebad5261e62e623ddbb34610852b6
-vendor/lib/libOmxG711Dec.so|be00f927b4bf7778218ed94e60ebc6b784a7bb18
-vendor/lib/libOmxQcelp13Dec.so|54f60b30a0d3d07a0f846028e48077035e50774d
-vendor/lib/libOmxVideoDSMode.so|5038c8e003496c1efe66681f24cc53d4623240c0
-vendor/lib/libOmxWmaDec.so|d92612bf69c037b86c0f3acbcac1b9976f1bee3f
-vendor/lib/libmm-color-convertor.so|e0033a1061209fa67a88a73d51cfed6a8587667f
-vendor/lib/libvqzip.so|224d6ed62e52b470d9821b99e59c0857609870a5
-vendor/lib64/libAlacSwDec.so|6e0e351d24c3b7b848f2923cf7d69d3e63ec9800
-vendor/lib64/libApeSwDec.so|c6853b37276ab4d26956d54e477b801f10216693
-vendor/lib64/libFlacSwDec.so|ed4d15211dcdb839acc0effc0c450ad549ad659d
-vendor/lib64/libI420colorconvert.so|257dcf2d03567fb153a69e7bb12e21953c639106
-vendor/lib64/libOmxAacDec.so|bc5e0ad97801e47e7f820bddb8d89a8a4c6a8c85
-vendor/lib64/libOmxAlacDec.so|49861a772ddbbc9616f922f1d901ef5a014de80f
-vendor/lib64/libOmxAlacDecSw.so|a6dfca665cfddf529ba89ff982cc88eb70d9a2b8
-vendor/lib64/libOmxAmrDec.so|0c64b0af0bba98b4a8be5ba83cd53b9d2d35dd96
-vendor/lib64/libOmxAmrwbplusDec.so|f549c4e30b9b76916fcc6e31c16e9403f01a042c
-vendor/lib64/libOmxApeDec.so|f0b80818e51156ac29ccbcad64ca579b9ff73e5a
-vendor/lib64/libOmxApeDecSw.so|22ea70b7a4f7eed4e399f8b85a73be6859e247f3
-vendor/lib64/libOmxEvrcDec.so|9fdcbce58b9cec3eae413fdeac852e066391d3c6
-vendor/lib64/libOmxG711Dec.so|a790263aff52b01ca820d2ad20eaa1fa4b64995f
-vendor/lib64/libOmxQcelp13Dec.so|f0358c768da5f8098ffb33dd0d78ecbc59d53a4e
-vendor/lib64/libOmxWmaDec.so|17fcb6a109d8c8064bed2bdffb65be7d3bb06163
-vendor/lib64/libmm-color-convertor.so|a31488f971b5874f72c7f154000b450156a7c211
+# Media - from LA.UM.9.11.r1-03900-NICOBAR.0
+vendor/lib/libAlacSwDec.so|1d074a0415ee358cd13c981e35266cff4c6863ce
+vendor/lib/libApeSwDec.so|ce425ef9372ed6635e313422b3578f77b90ff526
+vendor/lib/libFlacSwDec.so|01c7a51d93c2fe447e23c1210832b39b171393e3
+vendor/lib/libI420colorconvert.so|976e00c9e8966e4c7100099666846770d34f4153
+vendor/lib/libOmxAacDec.so|9a777962dda14e5638c11bf40be50bd410e2ede6
+vendor/lib/libOmxAlacDec.so|b0c21cea8aa8ea0d4e9e4f7085ea9aa5d83703fc
+vendor/lib/libOmxAlacDecSw.so|150f1fee193918792a88797766ddf12d1a388efd
+vendor/lib/libOmxAmrDec.so|75bda8033e4feaa0cee9b32c9fe2b142bc5bfad0
+vendor/lib/libOmxAmrwbplusDec.so|1219d97245f89add5257c5cdf9fc6c719da3cb1c
+vendor/lib/libOmxApeDec.so|816b2e3af3d8ac2561831df1d214249980192f40
+vendor/lib/libOmxApeDecSw.so|f3e64e54808f57f146173532335ea45db1fb54f4
+vendor/lib/libOmxDsdDec.so|f74936badeb8303b2bb17475b9cd157b1c81131c
+vendor/lib/libOmxEvrcDec.so|90bbf4baf4f8b830534a2f94aedef9bd44e81a13
+vendor/lib/libOmxG711Dec.so|18437f7f2b7e970304c0cfcde04e8de489ab6759
+vendor/lib/libOmxQcelp13Dec.so|1836ba707a7a1642ec0edf236be0e713f18bb90b
+vendor/lib/libOmxVideoDSMode.so|979e5cb96260c8fa60eb55825a2a22273f524c65
+vendor/lib/libOmxWmaDec.so|5880b8b0075313fd1d8d6c05e7a86b936713bb96
+vendor/lib/libmm-color-convertor.so|22d7b8f77d0f19826743206d79bdf9a6a8c9e18f
+vendor/lib64/libAlacSwDec.so|9fbfad65ffca33e1ac480e9cb056467ac75a6d5a
+vendor/lib64/libApeSwDec.so|76d3cc02ca1c3cdc3c71e57dc6e53027d2bf3d37
+vendor/lib64/libFlacSwDec.so|002aa39927e75568efb81c7ae3a044c694babfc3
+vendor/lib64/libI420colorconvert.so|e2d682f83c8f55276836903aa7701ef201edcc83
+vendor/lib64/libOmxAacDec.so|077a70a594b246d06f5e511084fb1913469a46df
+vendor/lib64/libOmxAlacDec.so|5a18e1e709b2bfec38888bf5734a8dbc59bf0960
+vendor/lib64/libOmxAlacDecSw.so|3ecf891368d0ad84903b792303ef841dc24f91c1
+vendor/lib64/libOmxAmrDec.so|662e4dedc3620674fa4bdf6b40175aacb6eff3a0
+vendor/lib64/libOmxAmrwbplusDec.so|3f13591fe3993d3cce1dd49164c24ebb0012f652
+vendor/lib64/libOmxApeDec.so|efb24e03cc55129113627c49d8d4683699f8ba97
+vendor/lib64/libOmxApeDecSw.so|6ec15cb9a251a35e7f7d427dcf0b0e945825518f
+vendor/lib64/libOmxEvrcDec.so|5e3562bdc1195c22a4a029931b745a6af7362ef2
+vendor/lib64/libOmxG711Dec.so|0febbc7f7c4e44d8d3dccfd6f40ae36d7551be8d
+vendor/lib64/libOmxQcelp13Dec.so|2c9039f7a6a11056a15d7d71f1cf551b5835ec93
+vendor/lib64/libOmxWmaDec.so|b1c761ccabe793268d9f1c791de25988a64050a6
+vendor/lib64/libmm-color-convertor.so|f169b7f24612b9a0c93b9d2eeb29cec04b0e4ec8
 
 # Mlipay - from wayne V9.7.4
 vendor/bin/mlipayd@1.1|13e9167024fd2dc49a56ed27e583057408dcc1eb
@@ -499,6 +497,10 @@ vendor/lib64/libmlipay.so|6cacf75f4a7eb50cbb7de384a3cfc1702a3a5f4a
 vendor/lib64/libmlipay@1.1.so|4dfa016779bcba8da2ff293e5112c678044c6474
 vendor/lib64/vendor.xiaomi.hardware.mlipay@1.0.so|d0bb854210433066945f9d6e7943d08a8435e746
 vendor/lib64/vendor.xiaomi.hardware.mlipay@1.1.so|785984e3c3b30671b78624484899dd418979cb56
+
+# MM OSAL - from LA.UM.9.11.r1-03900-NICOBAR.0
+vendor/lib/libmmosal.so|40dc5a502a63536a31083dc99776738171e07c86
+vendor/lib64/libmmosal.so|01ca88394da8db55606462494713612141880067
 
 # Perf - from LA.UM.8.6.2.r1-08600-89xx.0
 vendor/lib64/libadaptlaunch.so|cf784401fc827e5195d595a6d855ec89ea8c22bf
