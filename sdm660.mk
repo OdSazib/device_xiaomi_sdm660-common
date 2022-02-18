@@ -21,12 +21,6 @@
 # definition file).
 #
 
-# Board
-PRODUCT_USES_QCOM_HARDWARE := true
-PRODUCT_BOARD_PLATFORM := sdm660
-TARGET_BOARD_PLATFORM := sdm660
-OVERRIDE_QCOM_HARDWARE_VARIANT := sdm660
-
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base_telephony.mk)
@@ -36,12 +30,10 @@ $(call inherit-product-if-exists, build/target/product/embedded.mk)
 ifeq ($(ENABLE_APEX), true)
 TARGET_SUPPORTS_UPDATABLE_APEX := true
 $(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
-$(call inherit-product-if-exists, vendor/prebuilts/config/apex.mk)
 endif
 
 # Inherit proprietary files
 $(call inherit-product, vendor/xiaomi/sdm660-common/sdm660-common-vendor.mk)
-$(call inherit-product-if-exists, vendor/xiaomi/MiuiCamera/config.mk)
 
 # Common Tree Path
 COMMON_PATH := device/xiaomi/sdm660-common
@@ -69,7 +61,7 @@ PRODUCT_PACKAGES += \
     android.hardware.boot@1.0-impl \
     android.hardware.boot@1.0-impl.recovery \
     android.hardware.boot@1.0-service \
-    android.hardware.health@2.1-impl.recovery \
+    android.hardware.health@2.1-impl-qti.recovery \
     bootctrl.sdm660 \
     bootctrl.sdm660.recovery
 
@@ -89,10 +81,6 @@ PRODUCT_HOST_PACKAGES += \
 PRODUCT_PACKAGES_DEBUG += \
     update_engine_client
 endif
-
-# Adapt Launch 
-PRODUCT_COPY_FILES += \
-    $(COMMON_PATH)/configs/lm/AdaptLaunchFeature.xml:$(TARGET_COPY_OUT_VENDOR)/etc/lm/AdaptLaunchFeature.xml
 
 # Audio
 PRODUCT_PACKAGES += \
@@ -137,7 +125,7 @@ PRODUCT_COPY_FILES += \
 
 # ANT+
 PRODUCT_PACKAGES += \
-    AntHalService \
+    AntHalService-Soong \
     com.dsi.ant.antradio_library
 
 # ANT Permission
@@ -147,10 +135,6 @@ PRODUCT_COPY_FILES += \
 # AuthSecret
 PRODUCT_PACKAGES += \
     android.hardware.authsecret@1.0-service
-
-# ATRACE_HAL
-PRODUCT_PACKAGES += \
-    android.hardware.atrace@1.0-service
 
 # Biometrics
 PRODUCT_PACKAGES += \
@@ -167,21 +151,6 @@ PRODUCT_PACKAGES += \
     libldacBT_dec \
     libsndmonitor \
     vendor.qti.hardware.bluetooth_audio@2.0.vendor
-
-# Boot animation
-TARGET_BOOTANIMATION_SIZE := 1080p
-
-# Broadcastradio
-PRODUCT_PACKAGES += \
-    android.hardware.broadcastradio@1.0-impl
-
-# Camera
-PRODUCT_PACKAGES += \
-    android.hardware.camera.device@3.5 \
-    android.hardware.camera.provider@2.4-impl \
-    android.hardware.camera.provider@2.4-service \
-    android.hardware.camera.provider@2.6 \
-    vendor.qti.hardware.camera.device@1.0
 
 # Codec2 modules
 PRODUCT_PACKAGES += \
@@ -229,10 +198,6 @@ PRODUCT_PACKAGES += \
     vendor.display.config@2.0 \
     vendor.display.config@2.0.vendor
 
-# DeviceDoze
-PRODUCT_PACKAGES += \
-    DeviceDoze
-
 # DRM
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.0-impl \
@@ -242,10 +207,6 @@ PRODUCT_PACKAGES += \
 # Freeform Multiwindow
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.freeform_window_management.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.freeform_window_management.xml
-
-# Fstab
-PRODUCT_PACKAGES += \
-    fstab.qcom
 
 # fwk-detect
 PRODUCT_PACKAGES += \
@@ -257,21 +218,28 @@ PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
 # GPS / Location
 PRODUCT_PACKAGES += \
+    android.hardware.gnss@2.1 \
     android.hardware.gnss@2.1-impl-qti \
     android.hardware.gnss@2.1-service-qti \
+    flp.conf \
+    gnss_antenna_info.conf \
+    gps.conf \
+    gnss@2.0-base.policy \
+    gnss@2.0-xtra-daemon.policy \
+    gnss@2.0-xtwifi-client.policy \
+    gnss@2.0-xtwifi-inet-agent.policy \
     libbatching \
     libgeofencing \
     libgnss \
-    libsensorndkbridge \
-    libwifi-hal-ctrl
+    libloc_core
 
 # GPS Config
 PRODUCT_COPY_FILES += \
-    $(COMMON_PATH)/gps/etc/apdr.conf:$(TARGET_COPY_OUT_VENDOR)/etc/apdr.conf \
-    $(COMMON_PATH)/gps/etc/izat.conf:$(TARGET_COPY_OUT_VENDOR)/etc/izat.conf \
-    $(COMMON_PATH)/gps/etc/lowi.conf:$(TARGET_COPY_OUT_VENDOR)/etc/lowi.conf \
-    $(COMMON_PATH)/gps/etc/sap.conf:$(TARGET_COPY_OUT_VENDOR)/etc/sap.conf \
-    $(COMMON_PATH)/gps/etc/xtwifi.conf:$(TARGET_COPY_OUT_VENDOR)/etc/xtwifi.conf
+    $(COMMON_PATH)/configs/gps/apdr.conf:$(TARGET_COPY_OUT_VENDOR)/etc/apdr.conf \
+    $(COMMON_PATH)/configs/gps/izat.conf:$(TARGET_COPY_OUT_VENDOR)/etc/izat.conf \
+    $(COMMON_PATH)/configs/gps/lowi.conf:$(TARGET_COPY_OUT_VENDOR)/etc/lowi.conf \
+    $(COMMON_PATH)/configs/gps/sap.conf:$(TARGET_COPY_OUT_VENDOR)/etc/sap.conf \
+    $(COMMON_PATH)/configs/gps/xtwifi.conf:$(TARGET_COPY_OUT_VENDOR)/etc/xtwifi.conf
 
 # Healthd
 PRODUCT_PACKAGES += \
@@ -292,23 +260,14 @@ PRODUCT_COPY_FILES += \
     $(COMMON_PATH)/configs/idc/uinput-fpc.idc:$(TARGET_COPY_OUT_VENDOR)/usr/idc/uinput-fpc.idc \
     $(COMMON_PATH)/configs/idc/uinput-goodix.idc:$(TARGET_COPY_OUT_VENDOR)/usr/idc/uinput-goodix.idc
 
-# IFAAService
-PRODUCT_PACKAGES += \
-    IFAAService \
-    org.ifaa.android.manager
-
-# IFAA JAR
-PRODUCT_BOOT_JARS += \
-    org.ifaa.android.manager
-
 # IMS
 PRODUCT_PACKAGES += \
-    ims-ext-common_system \
+    ims-ext-common \
     ims_ext_common.xml \
 
 # IMS JAR
 PRODUCT_BOOT_JARS += \
-    ims-ext-common_system
+    ims-ext-common
 
 # Init
 PRODUCT_PACKAGES += \
@@ -323,7 +282,6 @@ PRODUCT_PACKAGES += \
     init.qcom.usb.sh \
     init.recovery.qcom.rc \
     init.target.rc \
-    init.xiaomi_parts.rc \
     init.verity.rc \
     ueventd.qcom.rc
 
@@ -400,9 +358,6 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.audio.pro.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.audio.pro.xml \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.bluetooth_le.xml \
     frameworks/native/data/etc/android.hardware.bluetooth.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.bluetooth.xml \
-    frameworks/native/data/etc/android.hardware.camera.front.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.front.xml \
-    frameworks/native/data/etc/android.hardware.camera.full.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.full.xml \
-    frameworks/native/data/etc/android.hardware.camera.raw.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.raw.xml \
     frameworks/native/data/etc/android.hardware.fingerprint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.fingerprint.xml \
     frameworks/native/data/etc/android.hardware.location.gps.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.location.gps.xml \
     frameworks/native/data/etc/android.hardware.opengles.aep.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.opengles.aep.xml \
@@ -437,10 +392,6 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.vulkan.version-1_0_3.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version-1_0_3.xml \
     frameworks/native/data/etc/android.software.vulkan.deqp.level-2020-03-01.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.vulkan.deqp.level.xml \
     frameworks/native/data/etc/android.hardware.ethernet.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.ethernet.xml
-
-# Perfd (dummy)
-PRODUCT_PACKAGES += \
-    libqti-perfd-client
 
 # Power
 PRODUCT_PACKAGES += \
@@ -541,6 +492,10 @@ PRODUCT_SOONG_NAMESPACES += \
     hardware/google/interfaces \
     hardware/google/pixel
 
+# Sqlite
+PRODUCT_PACKAGES += \
+    sqlite3
+
 # Tetheroffload
 PRODUCT_PACKAGES += \
     ipacm \
@@ -606,11 +561,3 @@ PRODUCT_PACKAGES += \
 # WiFi Display JAR
 PRODUCT_BOOT_JARS += \
     WfdCommon
-
-# DeviceSettings
-PRODUCT_PACKAGES += \
-   DeviceSettings
-   
-# IPA
-USE_DEVICE_SPECIFIC_DATA_IPA_CFG_MGR := true
-USE_DEVICE_SPECIFIC_IPACFG_MGR := true
