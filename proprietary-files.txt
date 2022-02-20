@@ -260,12 +260,6 @@ vendor/lib64/libsecureui.so|2dc60336aef5b68f20173648952477202b00c009
 vendor/lib64/libsecureui_svcsock.so|9cb1b317f10d53819158ff8b05b25929a7759857
 vendor/lib64/libssd.so|bf3b64cc51cbbe2d70373d94025725c49ce1d46b
 
-# DRM (Qualcomm Trusted Execution Enviroment) - from LA.UM.8.2.1.r1-05600-sdm660
-vendor/bin/hw/vendor.qti.hardware.qteeconnector@1.0-service|03375bfa75e917a91ebca43975c3b461f242dace
-vendor/etc/init/vendor.qti.hardware.qteeconnector@1.0-service.rc|c966350ee67d3a7c73ca7184e3725264025d16f5
-vendor/lib64/hw/vendor.qti.hardware.qteeconnector@1.0-impl.so|ec2e5f46b1468ca9f88ae938375fb7249b499963
-vendor/lib64/vendor.qti.hardware.qteeconnector@1.0.so|50ee00e9ecf66258efbc544492982af16b5c91d6
-
 # DRM (TUI) - from LA.UM.8.2.1.r1-05600-sdm660
 vendor/bin/hw/vendor.qti.hardware.tui_comm@1.0-service-qti|d4d025e0a12af87f65104fe07801517938733603
 vendor/etc/init/vendor.qti.hardware.tui_comm@1.0-service-qti.rc|2cfc563d7e1579374f001c94588fae7835a12ffc
