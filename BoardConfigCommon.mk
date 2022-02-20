@@ -177,9 +177,6 @@ TARGET_SYSTEM_EXT_PROP += $(COMMON_PATH)/properties/system_ext.prop
 TARGET_SYSTEM_PROP += $(COMMON_PATH)/properties/system.prop
 TARGET_VENDOR_PROP += $(COMMON_PATH)/properties/vendor.prop
 
-# Renderscript
-OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
-
 # RIL
 PROTOBUF_SUPPORTED := true
 ENABLE_VENDOR_RIL_SERVICE := true
