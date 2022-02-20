@@ -1,4 +1,4 @@
-<manifest version="1.0" type="device" target-level="4">
+<manifest version="1.0" type="device" target-level="5">
     <hal format="hidl">
         <name>android.hardware.audio</name>
         <transport>hwbinder</transport>
@@ -111,13 +111,6 @@
         <fqname>@2.0::ISupplicantVendor/default</fqname>
     </hal>
     <hal format="hidl">
-        <name>com.fingerprints.extension</name>
-        <transport>hwbinder</transport>
-        <fqname>@1.0::IFingerprintEngineering/default</fqname>
-        <fqname>@1.0::IFingerprintNavigation/default</fqname>
-        <fqname>@1.0::IFingerprintSensorTest/default</fqname>
-    </hal>
-    <hal format="hidl">
         <name>com.qualcomm.qti.ant</name>
         <transport>hwbinder</transport>
         <fqname>@1.0::IAntHci/default</fqname>
@@ -151,11 +144,6 @@
         <name>vendor.display.postproc</name>
         <transport>hwbinder</transport>
         <fqname>@1.0::IDisplayPostproc/default</fqname>
-    </hal>
-    <hal format="hidl">
-        <name>vendor.goodix.hardware.fingerprint</name>
-        <transport>hwbinder</transport>
-        <fqname>@1.0::IGoodixBiometricsFingerprint/default</fqname>
     </hal>
     <hal format="hidl">
         <name>vendor.qti.hardware.data.iwlan</name>
