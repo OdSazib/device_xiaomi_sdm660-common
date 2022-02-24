@@ -7,8 +7,10 @@ ro.config.media_vol_steps=25
 ro.config.vc_call_vol_steps=7
 
 # Bluetooth
-persist.vendor.bt.a2dp_offload_cap=sbc-aac-aptx-aptxhd-ldac
-vendor.bluetooth.soc=cherokee
+persist.bluetooth.a2dp_offload.disabled=false
+persist.vendor.bt.a2dp.aac_whitelist=false
+ro.bluetooth.a2dp_offload.supported=true
+ro.bluetooth.library_name=libbluetooth_qti.so
 
 # Blur
 ro.surface_flinger.supports_background_blur=0

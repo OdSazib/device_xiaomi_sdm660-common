@@ -48,6 +48,7 @@ vendor.fm.a2dp.conc.disabled=true
 vendor.voice.path.for.pcm.voip=true
 
 # Audio Feature
+vendor.audio.feature.a2dp_offload.enable=true
 vendor.audio.feature.afe_proxy.enable=true
 vendor.audio.feature.anc_headset.enable=true
 vendor.audio.feature.audiozoom.enable=false
@@ -91,12 +92,18 @@ vendor.audio.feature.wsa.enable=false
 vendor.audio.feature.spkr_prot.enable=true
 
 # Bluetooth & FM
-persist.bluetooth.bluetooth_audio_hal.disabled=false
-persist.vendor.qcom.bluetooth.enable.splita2dp=false
-ro.vendor.bluetooth.wipower=false
-vendor.qcom.bluetooth.soc=cherokee
 bt.max.hfpclient.connections=1
+persist.bluetooth.a2dp_offload.cap=sbc-aac-aptx-aptxhd-ldac
+persist.bluetooth.bluetooth_audio_hal.disabled=false
+persist.vendor.bt.a2dp_offload_cap=sbc-aptx-aptxhd-aac
+persist.vendor.qcom.bluetooth.a2dp_offload_cap=sbc-aptx-aptxhd-aac-ldac
+persist.vendor.qcom.bluetooth.aac_frm_ctl.enabled=true
+persist.vendor.qcom.bluetooth.enable.splita2dp=true
+persist.vendor.qcom.bluetooth.scram.enabled=false
+persist.vendor.qcom.bluetooth.soc=cherokee
+ro.vendor.bluetooth.wipower=false
 ro.vendor.fm.use_audio_session=true
+vendor.qcom.bluetooth.soc=cherokee
 vendor.hw.fm.init=0
 
 # BPF

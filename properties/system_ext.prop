@@ -1,3 +1,6 @@
-# QCOM
+# BT
+ro.bluetooth.library_name=libbluetooth_qti.so
+
+# DPM
 persist.vendor.dpm.feature=11
 persist.vendor.dpm.nsrm.bkg.evt=3955
