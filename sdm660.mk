@@ -13,6 +13,8 @@ $(call inherit-product-if-exists, build/target/product/embedded.mk)
 ifeq ($(ENABLE_APEX), true)
 TARGET_SUPPORTS_UPDATABLE_APEX := true
 $(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
+else
+PRODUCT_COMPRESSED_APEX := false
 endif
 
 # Inherit proprietary files
