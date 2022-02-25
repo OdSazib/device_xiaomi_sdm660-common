@@ -35,11 +35,10 @@ dalvik.vm.debug.alloc=0
 
 # Display
 debug.performance.tuning=1
-persist.vendor.color.matrix=2
+persist.demo.hdmirotationlock=false
 persist.hwc.enable_vds=1
 ro.qualcomm.cabl=0
-video.disable.ubwc=1
-vendor.display.disable_rotator_downscale=1
+sdm.debug.disable_skip_validate=1
 
 # Fwk detect
 ro.vendor.qti.va_aosp.support=1
@@ -50,10 +49,6 @@ ro.max.fling_velocity=20000
 
 # Gboard
 ro.com.google.ime.kb_pad_port_b=1
-
-# Graphics
-ro.hardware.egl=adreno
-ro.hardware.vulkan=adreno
 
 # IMS
 persist.dbg.volte_avail_ovr=1
@@ -102,9 +97,6 @@ persist.sys.fflag.override.settings_network_and_internet_v2=true
 ril.subscription.types=RUIM,NV
 ro.telephony.default_network=33,33
 telephony.lteOnCdmaDevice=1
-
-# Rendering
-persist.hwc.ptor.enable=true
 
 # SELinux
 ro.build.selinux=1
