@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019 The LineageOS Project
+# Copyright (C) 2021-22 Paranoid Android
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -10,28 +10,44 @@ include $(LOCAL_PATH)/vndk-ext-libs.mk
 
 define define-vndk-lib
 include $$(CLEAR_VARS)
-LOCAL_MODULE := $1.vndk-ext-gen
+LOCAL_MODULE := $1.$2
 LOCAL_MODULE_CLASS := SHARED_LIBRARIES
-LOCAL_PREBUILT_MODULE_FILE := $$(call intermediates-dir-for,SHARED_LIBRARIES,$1,,,$3,)/$1.so
+LOCAL_PREBUILT_MODULE_FILE := $$(call intermediates-dir-for,SHARED_LIBRARIES,$1)/$1.so
 LOCAL_STRIP_MODULE := false
-LOCAL_MULTILIB := $2
+LOCAL_MULTILIB := first
 LOCAL_MODULE_TAGS := optional
-LOCAL_INSTALLED_MODULE_STEM := $$(basename $1).so
+LOCAL_INSTALLED_MODULE_STEM := $1.so
 LOCAL_MODULE_SUFFIX := .so
-LOCAL_VENDOR_MODULE := true
+LOCAL_MODULE_RELATIVE_PATH := $3
+LOCAL_VENDOR_MODULE := $4
 LOCAL_CHECK_ELF_FILES := false
 include $$(BUILD_PREBUILT)
+
+ifneq ($$(TARGET_2ND_ARCH),)
+ifneq ($$(TARGET_TRANSLATE_2ND_ARCH),true)
+include $$(CLEAR_VARS)
+LOCAL_MODULE := $1.$2
+LOCAL_MODULE_CLASS := SHARED_LIBRARIES
+LOCAL_PREBUILT_MODULE_FILE := $$(call intermediates-dir-for,SHARED_LIBRARIES,$1,,,$(TARGET_2ND_ARCH_VAR_PREFIX))/$1.so
+LOCAL_STRIP_MODULE := false
+LOCAL_MULTILIB := 32
+LOCAL_MODULE_TAGS := optional
+LOCAL_INSTALLED_MODULE_STEM := $1.so
+LOCAL_MODULE_SUFFIX := .so
+LOCAL_MODULE_RELATIVE_PATH := $3
+LOCAL_VENDOR_MODULE := $4
+LOCAL_CHECK_ELF_FILES := false
+include $$(BUILD_PREBUILT)
+endif # TARGET_TRANSLATE_2ND_ARCH is not true
+endif # TARGET_2ND_ARCH is not empty
 endef
 
-$(foreach lib,$(EXTRA_VENDOR_LIBRARIES_32),\
-    $(eval $(call define-vndk-lib,$(lib),32,$(TARGET_2ND_ARCH_VAR_PREFIX))))
-
-$(foreach lib,$(EXTRA_VENDOR_LIBRARIES_64),\
-    $(eval $(call define-vndk-lib,$(lib),first,)))
+$(foreach lib,$(EXTRA_VENDOR_LIBRARIES),\
+    $(eval $(call define-vndk-lib,$(lib),vndk-ext-gen,,true)))
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := vndk-ext
 LOCAL_MODULE_TAGS := optional
-LOCAL_CHECK_ELF_FILES := false
-LOCAL_REQUIRED_MODULES := $(addsuffix .vndk-ext-gen,$(EXTRA_VENDOR_LIBRARIES_32) $(EXTRA_VENDOR_LIBRARIES_64))
+LOCAL_REQUIRED_MODULES := \
+    $(addsuffix .vndk-ext-gen,$(EXTRA_VENDOR_LIBRARIES))
 include $(BUILD_PHONY_PACKAGE)
