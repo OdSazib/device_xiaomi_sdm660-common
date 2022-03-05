@@ -22,3 +22,8 @@ cc_library_shared {
 
     proprietary: true,
 }
+
+cc_library_shared {
+    name: "libshim_wfd",
+    srcs : ["wfd_shim.cpp"],
+}
