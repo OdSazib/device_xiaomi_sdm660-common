@@ -285,7 +285,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     sys.thermal.data.path=/data/vendor/thermal/
 
 # WFD
-PRODUCT_PROPERTY_OVERRIDES += \
+RODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     persist.debug.wfd.enable=1 \
     persist.sys.wfd.virtual=0
 
