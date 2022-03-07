@@ -529,7 +529,6 @@ BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 
 # Shims
 PRODUCT_PACKAGES += \
-    camera.sdm660_shim \
     libshim_wfd
 
 # Soong namespaces

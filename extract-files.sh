@@ -78,10 +78,6 @@ function blob_fixup() {
         "${PATCHELF}" --add-needed "libshim_wfd.so" "${2}"
         ;;
 
-    vendor/lib/hw/camera.sdm660.so)
-        "${PATCHELF}" --add-needed camera.sdm660_shim.so "${2}"
-        ;;
-
     vendor/lib64/libril-qc-hal-qmi.so)
         "${PATCHELF}" --replace-needed "libprotobuf-cpp-full.so" "libprotobuf-cpp-full-v29.so" "${2}"
         ;;
