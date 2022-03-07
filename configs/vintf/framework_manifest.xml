@@ -14,4 +14,10 @@
         </interface>
         <fqname>@1.0::IAtCmdFwd/AtCmdFwdService</fqname>
     </hal>
+    <!-- diaghal -->
+    <hal format="hidl">
+        <name>vendor.qti.diaghal</name>
+        <transport>hwbinder</transport>
+        <fqname>@1.0::Idiag/default</fqname>
+    </hal>
 </manifest>
