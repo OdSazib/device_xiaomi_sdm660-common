@@ -51,6 +51,7 @@
     <allow-in-power-save package="com.qualcomm.qti.callenhancement" />
     <allow-in-power-save package="com.qualcomm.qti.smartassistant" />
     <allow-in-power-save package="com.skyhook.blp" />
+    <allow-implicit-broadcast action="org.codeaurora.intent.action.PRE_ALERTING_CALL_INFO" />
     <!-- These telephony applications need access to non-[System]SDK APIs -->
     <hidden-api-whitelisted-app package="com.qualcomm.uimremoteserver" />
     <hidden-api-whitelisted-app package="com.qualcomm.uimremoteclient" />
@@ -86,7 +87,6 @@
     <hidden-api-whitelisted-app package="com.qualcomm.qti.uimlpatest" />
     <hidden-api-whitelisted-app package="com.qualcomm.qti.lpa" />
     <hidden-api-whitelisted-app package="com.qualcomm.qti.uim" />
-
     <hidden-api-whitelisted-app package="org.codeaurora.snapcam" />
     <hidden-api-whitelisted-app package="com.android.mms" />
     <hidden-api-whitelisted-app package="com.qualcomm.qti.carrierswitch" />
@@ -117,5 +117,4 @@
     <hidden-api-whitelisted-app package="com.qualcomm.wfd.service" />
     <hidden-api-whitelisted-app package="com.qualcomm.qti.server.wigigapp" />
     <hidden-api-whitelisted-app package="com.qti.service.colorservice" />
-    <allow-implicit-broadcast action="org.codeaurora.intent.action.CALL_COMPOSER_INFO" />
 </config>
