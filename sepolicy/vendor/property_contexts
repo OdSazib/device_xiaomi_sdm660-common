@@ -22,13 +22,14 @@ vidc.enc.dcvs.extra-buff-count          u:object_r:vendor_default_prop:s0
 vendor.camera.cpuperf.en                u:object_r:vendor_default_prop:s0
 
 # Fingerprint
-fpc_kpi                                 u:object_r:vendor_default_prop:s0
-gf.debug.dump_data                      u:object_r:vendor_default_prop:s0
-persist.sys.fp.                         u:object_r:hal_fingerprint_prop:s0
-persist.vendor.sys.fp.                  u:object_r:hal_fingerprint_prop:s0
-ro.boot.fp.                             u:object_r:hal_fingerprint_prop:s0
-ro.boot.fpsensor                        u:object_r:hal_fingerprint_prop:s0
-sys.fp.                                 u:object_r:hal_fingerprint_prop:s0
+fpc_kpi                                 u:object_r:hal_fingerprint_prop:s0 exact enum fpc
+gf.debug.dump_data                      u:object_r:hal_fingerprint_prop:s0 exact enum goodix
+persist.sys.fp.                         u:object_r:hal_fingerprint_prop:s0 prefix
+persist.vendor.sys.fp.                  u:object_r:hal_fingerprint_prop:s0 exact enum fpc goodix
+ro.boot.fp.                             u:object_r:hal_fingerprint_prop:s0 exact enum fpc goodix
+ro.boot.fpsensor                        u:object_r:hal_fingerprint_prop:s0 exact enum fpc goodix
+sys.fp.                                 u:object_r:hal_fingerprint_prop:s0 exact enum fpc goodix
+sys.fp.vendor                           u:object_r:hal_fingerprint_prop:s0 exact enum fpc goodix
 
 # Media
 gpu.stats.debug.level                   u:object_r:vendor_default_prop:s0
