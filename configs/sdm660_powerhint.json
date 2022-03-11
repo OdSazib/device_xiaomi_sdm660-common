@@ -184,16 +184,6 @@
       "ResetOnInit": true
     },
     {
-      "Name": "PMQoSCpuDmaLatency",
-      "Path": "/dev/cpu_dma_latency",
-      "Values": [
-        "2",
-        "43",
-        "100"
-      ],
-      "HoldFd": true
-    },
-    {
       "Name": "PowerHALMainState",
       "Path": "vendor.powerhal.state",
       "Values": [
@@ -346,12 +336,6 @@
       "PowerHint": "AUDIO_LAUNCH",
       "Node": "PMQoSCpuDmaLatency",
       "Duration": 0,
-      "Value": "43"
-    },
-    {
-      "PowerHint": "AUDIO_STREAMING",
-      "Node": "PMQoSCpuDmaLatency",
-      "Duration": 2000,
       "Value": "43"
     },
     {
